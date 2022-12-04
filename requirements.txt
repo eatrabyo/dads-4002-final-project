@@ -1,3 +1,4 @@
 ipykernel==6.15.1
 SQLAlchemy==1.4.44
 pandas==1.5.1
+openpyxl==3.0.10
