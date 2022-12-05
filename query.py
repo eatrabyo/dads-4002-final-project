@@ -5,7 +5,7 @@ import pandas as pd
 
 def query_stock_alert(engine):
     try:
-        stmt = f"""SELECT p.product_name, p.stock from product p
+        stmt = f"""SELECT p.id as product_id ,p.product_name, p.stock from product p
             where p.stock < 10"""
         t = text(stmt)
         df = pd.read_sql(t, con=engine)
