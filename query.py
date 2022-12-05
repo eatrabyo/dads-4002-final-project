@@ -63,3 +63,36 @@ def query_product_by_id(engine,product_id):
         print(type(e))
         print(e.orig)
         print(e.statement)
+
+def query_trans_id_list(engine):
+    try:
+        stmt = """SELECT DISTINCT(m.transaction_id) as trans_id from main m"""
+        t = text(stmt)
+        df = pd.read_sql(t, con=engine)
+        trans_list = df['trans_id'].to_list()
+        return trans_list
+    except exc.SQLAlchemyError as e:
+        print(type(e))
+        print(e.orig)
+        print(e.statement)
+
+def query_trans_by_id(engine,trans_id,row_id = None):
+    try:
+        if row_id == None:
+            stmt = f"""SELECT * from main m
+                where m.transaction_id = '{trans_id}' """
+            t = text(stmt)
+            df = pd.read_sql(t, con=engine)
+            df.set_index('id',inplace=True)
+            return df
+        else:
+            stmt = f"""SELECT * from main m
+                where m.transaction_id = '{trans_id}' and m.id = {row_id} """
+            t = text(stmt)
+            df = pd.read_sql(t, con=engine)
+            df.set_index('id',inplace=True)
+            return df
+    except exc.SQLAlchemyError as e:
+        print(type(e))
+        print(e.orig)
+        print(e.statement)
