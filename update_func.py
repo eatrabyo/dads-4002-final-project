@@ -4,14 +4,24 @@ from sqlalchemy import exc, text, bindparam
 
 def update_email(engine,cus_id,email):
     try:
-        with engine.begin() as conn:
-            sql = f"""
-            UPDATE customer SET email = '{email}'
-            WHERE id = {cus_id}
-            """
-            
-            conn.execute(text(sql))
-        print('Finished update new email.')
+        if email != '':
+            with engine.begin() as conn:
+                sql = f"""
+                UPDATE customer SET email = '{email}'
+                WHERE id = {cus_id}
+                """
+                
+                conn.execute(text(sql))
+            print('Finished update new email.')
+        else:
+            with engine.begin() as conn:
+                sql = f"""
+                UPDATE customer SET email = NULL
+                WHERE id = {cus_id}
+                """
+                
+                conn.execute(text(sql))
+            print('Finished update new email.')
     except exc.SQLAlchemyError as e:
         print(type(e))
         print(e.orig)
