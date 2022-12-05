@@ -14,3 +14,28 @@ def query_stock_alert(engine):
         print(type(e))
         print(e.orig)
         print(e.statement)
+
+def query_customer_by_id(engine,cus_id):
+    try:
+        stmt = f"""SELECT c.id as customer_id, c.customer_user,c.phone_number,c.email  from customer c
+            where c.id = {cus_id} """
+        t = text(stmt)
+        df = pd.read_sql(t, con=engine)
+        df.set_index('customer_id',inplace=True)
+        return df
+    except exc.SQLAlchemyError as e:
+        print(type(e))
+        print(e.orig)
+        print(e.statement)
+
+def query_customer_list(engine):
+    try:
+        stmt = f"""SELECT c.id as customer_id from customer c"""
+        t = text(stmt)
+        df = pd.read_sql(t, con=engine)
+        cus_list = df['customer_id'].to_list()
+        return cus_list
+    except exc.SQLAlchemyError as e:
+        print(type(e))
+        print(e.orig)
+        print(e.statement)
