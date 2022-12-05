@@ -1,6 +1,5 @@
 import pandas as pd
 from sqlalchemy import exc, text, bindparam
-import pandas as pd
 
 
 def query_stock_alert(engine):
