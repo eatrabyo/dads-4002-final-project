@@ -1,8 +1,10 @@
 import os
+import datetime
 
 from query import query_customer_by_id, query_customer_list,query_product_list,query_product_by_id,query_trans_id_list,query_trans_by_id
 from engine import main_db
-from update_func import update_email,update_phone,update_stock,update_prod_cost
+from update_func import update_email,update_phone,update_stock,update_prod_cost,update_product_main,update_customer_main,update_purchasing_time_main,update_product_price_main,\
+    update_product_unit_main
 
 # update customer table menu
 def update_customer_tbl():
@@ -116,7 +118,7 @@ def update_product_tbl():
                             new_stock = int(input('Enter new stock value: '))
                             break
                         except:
-                            print("Please enter only number")
+                            print("Please enter only integer number")
                             continue
 
                     # update new data to our db
@@ -132,7 +134,7 @@ def update_product_tbl():
                             if new_cost != 0:
                                 break
                             else:
-                                print('Invalid input')
+                                print('Please enter only number')
                                 continue
                         except:
                             print("Please enter only number")
@@ -195,6 +197,7 @@ while True:
                     print('Wrong menu number.')
                     continue
             
+            # Product id menu
             if product_update_menu_num == '1':
                 os.system('clear') # 'clear' on mac, for windows 'cls'
                 print(trans_df)
@@ -225,29 +228,150 @@ while True:
                     if edited_product_id in product_list:
                         break
                     else:
-                        print('Wrong product id.')
+                        print(f'Product id: {edited_product_id} is not in database.')
                         continue
                 
                 # update new data
-                print(edited_product_id)
+                update_product_main(engine=main_db,row_id=row_id,product_id=edited_product_id)
                 # show new data
                 new_trans_df = query_trans_by_id(main_db,trans_id,row_id=row_id)
                 print('\n',new_trans_df)
                 
+            # customer id menu
             elif product_update_menu_num == '2':
-                pass
+                os.system('clear') # 'clear' on mac, for windows 'cls'
+                print(trans_df)
+
+                customer_list = query_customer_list(main_db)
+                # check if edited customer id is in our db
+                while True:
+                    try:
+                        edited_customer_id = int(input('Enter revised customer id: '))
+                        if edited_customer_id in customer_list:
+                            break
+                        else:
+                            print(f'Customer id: {edited_customer_id} is not in database.')
+                            continue
+                    except:
+                        print('Enter valid customer id.')
+                
+                # update new data
+                update_customer_main(engine=main_db,trans_id=trans_id,cus_id=edited_customer_id)
+                # show new data
+                new_trans_df = query_trans_by_id(main_db,trans_id)
+                print('\n',new_trans_df)
+            
+            # purchasing time menu
             elif product_update_menu_num == '3':
-                pass
+                os.system('clear') # 'clear' on mac, for windows 'cls'
+                print(trans_df)
+
+                # check user input is correct datetime format
+                while True:
+                    try:
+                        edited_datetime = input("Enter revised date and time in format (YYYY-MM-DD hh:mm): ")
+                        format_datetime = datetime.datetime.strptime(edited_datetime,"%Y-%m-%d %H:%M")
+                        break
+                    except:
+                        print("Invalid date and time format")
+                        continue
+                # update new data
+                update_purchasing_time_main(engine=main_db,trans_id=trans_id,purchasing_time=format_datetime)
+                # show new data
+                new_trans_df = query_trans_by_id(main_db,trans_id)
+                print('\n',new_trans_df)
+
+            # Price per unit menu
             elif product_update_menu_num == '4':
-                pass
+                os.system('clear') # 'clear' on mac, for windows 'cls'
+                print(trans_df)
+
+                # check if user input row_id match with list of primary key
+                while True:
+                    try:
+                        row_id = int(input("\nWhich row would you like to revised product's price: "))
+                        if row_id in main_tbl_id:
+                            break
+                        else:
+                            os.system('clear') # 'clear' on mac, for windows 'cls'
+                            print(f'Please enter valid row id for {trans_id}\n')
+                            print(trans_df)
+                            continue
+                    except:
+                        os.system('clear') # 'clear' on mac, for windows 'cls'
+                        print(f'Please enter valid row id for {trans_id}\n')
+                        print(trans_df)
+                        continue
+                
+                # temp df for using in format string
+                df_temp = trans_df.copy()
+                df_temp.reset_index(inplace=True)
+                
+                # check if price is valid
+                while True:
+                    try:
+                        edited_price = float(input(f"Enter revised price for {df_temp.loc[df_temp['id'] == row_id,'product_id'].values[0]}: "))
+                        break
+                    except:
+                        print('Please enter valid price.')
+                # update new data
+                update_product_price_main(engine=main_db,row_id=row_id,product_price=edited_price)
+                # show new data
+                new_trans_df = query_trans_by_id(main_db,trans_id,row_id=row_id)
+                print('\n',new_trans_df)
+                
+            # Unit menu
             elif product_update_menu_num == '5':
-                pass
+                os.system('clear') # 'clear' on mac, for windows 'cls'
+                print(trans_df)
+
+                # check if user input row_id match with list of primary key
+                while True:
+                    try:
+                        row_id = int(input("\nWhich row would you like to revised product's selling unit: "))
+                        if row_id in main_tbl_id:
+                            break
+                        else:
+                            os.system('clear') # 'clear' on mac, for windows 'cls'
+                            print(f'Please enter valid row id for {trans_id}\n')
+                            print(trans_df)
+                            continue
+                    except:
+                        os.system('clear') # 'clear' on mac, for windows 'cls'
+                        print(f'Please enter valid row id for {trans_id}\n')
+                        print(trans_df)
+                        continue
+                
+                # temp df for using in format string
+                df_temp = trans_df.copy()
+                df_temp.reset_index(inplace=True)
+                
+                # check if price is valid
+                while True:
+                    try:
+                        edited_unit = int(input(f"Enter revised selling unit for {df_temp.loc[df_temp['id'] == row_id,'product_id'].values[0]}: "))
+                        break
+                    except:
+                        print('Please enter integer only.')
+                # update new data
+                update_product_unit_main(engine=main_db,row_id=row_id,product_unit=edited_unit)
+                # show new data
+                new_trans_df = query_trans_by_id(main_db,trans_id,row_id=row_id)
+                print('\n',new_trans_df)
+
+            # Destination district menu
             elif product_update_menu_num == '6':
                 pass
+
+            # Destination province menu
             elif product_update_menu_num == '7':
                 pass
+
+            # Postal code menu
             elif product_update_menu_num == '8':
                 pass
+
+            # Exit menu
             elif product_update_menu_num == '9':
                 break
         else:
