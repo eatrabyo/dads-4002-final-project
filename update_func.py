@@ -1,5 +1,4 @@
-import pandas as pd
-from sqlalchemy import exc, text, bindparam
+from sqlalchemy import exc, text
 
 
 def update_email(engine,cus_id,email):
