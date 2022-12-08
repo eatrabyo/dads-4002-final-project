@@ -96,3 +96,16 @@ def query_trans_by_id(engine,trans_id,row_id = None):
         print(type(e))
         print(e.orig)
         print(e.statement)
+
+def query_stock_by_product_id(engine,product_id):
+    try:
+        stmt = f"""SELECT p.stock from product p
+            WHERE p.id = '{product_id}'"""
+        t = text(stmt)
+        df = pd.read_sql(t, con=engine)
+        old_stock = df['stock'][0]
+        return old_stock
+    except exc.SQLAlchemyError as e:
+        print(type(e))
+        print(e.orig)
+        print(e.statement)
