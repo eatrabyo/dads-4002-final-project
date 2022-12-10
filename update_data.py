@@ -166,7 +166,7 @@ def update_product_tbl():
         elif loop_to_main == 'n':
             break
 
-
+# update main table menu
 def update_main_tbl():
     # update main table
     while True:
@@ -230,7 +230,7 @@ def update_main_tbl():
                     while True:
                         edited_product_id = input('Enter revised product id: ')
                         if edited_product_id in product_list:
-                            if edited_product_id not in product_in_trans_list:
+                            if edited_product_id not in product_in_trans_list: # check for duplicated product_id
                                 break
                             else:
                                 print(f"This product ({edited_product_id}) already in {trans_id}.")

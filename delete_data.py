@@ -63,4 +63,3 @@ def delete_transaction_tbl():
         elif loop_to_main == 'n':
             break
 
-delete_transaction_tbl()
