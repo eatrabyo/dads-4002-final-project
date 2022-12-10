@@ -37,7 +37,7 @@ def update_customer_tbl():
 
                     # check if phone number have length of 11 and start with 66
                     while True:
-                        new_phone = input('Enter new phone number: ')
+                        new_phone = input('Enter new phone number in format (66XXXXXXXXX): ')
                         if len(new_phone) == 11 and new_phone.startswith('66',0,2) == True:
                             break
                         else:
