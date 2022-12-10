@@ -37,7 +37,7 @@ def update_customer_tbl():
 
                     # check if phone number have length of 11 and start with 66
                     while True:
-                        new_phone = input('Enter new phone number in format (66XXXXXXXXX): ')
+                        new_phone = input('Enter new phone number in format (replace 0 with 66): ')
                         if len(new_phone) == 11 and new_phone.startswith('66',0,2) == True:
                             break
                         else:
@@ -367,7 +367,11 @@ def update_main_tbl():
                     while True:
                         try:
                             edited_unit = int(input(f"Enter revised selling unit for {product_name}: "))
-                            break
+                            if edited_unit > 0:
+                                break
+                            else:
+                                print('Invalid unit')
+                                continue
                         except:
                             print('Please enter integer only.')
                     
