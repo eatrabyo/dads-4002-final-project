@@ -2,7 +2,7 @@ import os
 import datetime
 import pandas as pd
 
-from query import query_customer_by_id, query_customer_list,query_product_list,query_product_by_id,query_trans_id_list,query_trans_by_id,query_stock_by_product_id
+from query import query_customer_by_id, query_customer_list,query_product_list,query_product_by_id,query_trans_id_list,query_trans_by_id,query_stock_by_product_id,query_product_name
 from engine import main_db
 from update_func import update_email,update_phone,update_stock,update_prod_cost,update_product_main,update_customer_main,update_purchasing_time_main,update_product_price_main,\
     update_product_unit_main,update_address
@@ -362,25 +362,28 @@ def update_main_tbl():
 
                     # query old stock
                     old_stock = query_stock_by_product_id(engine=main_db,product_id=prod_id_to_revised) + old_unit
-                    
-                    # check if selling unit is valid
+                    product_name = query_product_name(main_db,prod_id_to_revised)
+                    # check if selling unit is integer
                     while True:
                         try:
-                            edited_unit = int(input(f"Enter revised selling unit for {prod_id_to_revised}: "))
+                            edited_unit = int(input(f"Enter revised selling unit for {product_name}: "))
                             break
                         except:
                             print('Please enter integer only.')
                     
                     # new unit to update
                     new_stock = old_stock - edited_unit
-                    
-                    # update new data
-                    update_stock(engine=main_db,product_id=prod_id_to_revised,stock=new_stock)
-                    update_product_unit_main(engine=main_db,row_id=row_id,product_unit=edited_unit)
+                    if new_stock >= 0:
 
-                    # show new data
-                    new_trans_df = query_trans_by_id(main_db,trans_id,row_id=row_id)
-                    print('\n',new_trans_df)
+                        # update new data
+                        update_stock(engine=main_db,product_id=prod_id_to_revised,stock=new_stock)
+                        update_product_unit_main(engine=main_db,row_id=row_id,product_unit=edited_unit)
+
+                        # show new data
+                        new_trans_df = query_trans_by_id(main_db,trans_id,row_id=row_id)
+                        print('\n',new_trans_df)
+                    else:
+                        print(f"We don't have enough stock for {product_name}.")
 
                 # Postal 
                 elif product_update_menu_num == '6':
