@@ -3,6 +3,7 @@ PROJECT_DESCRIPTION.pdf
 *.docx
 *.pdf
 config.yaml
+test_run.py
 *.ipynb
 # Byte-compiled / optimized / DLL files
 __pycache__/

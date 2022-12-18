@@ -1,5 +1,4 @@
-import pandas as pd
-from sqlalchemy import exc, text, bindparam
+from sqlalchemy import exc, text
 
 
 def update_email(engine,cus_id,email):
@@ -86,6 +85,7 @@ def update_product_main(engine,row_id,product_id):
         print(type(e))
         print(e.orig)
         print(e.statement)
+
 def update_customer_main(engine,trans_id,cus_id):
     try:
         with engine.begin() as conn:
@@ -140,6 +140,22 @@ def update_product_unit_main(engine,row_id,product_unit):
             
             conn.execute(text(sql))
         print("Finished revised product's selling unit.")
+    except exc.SQLAlchemyError as e:
+        print(type(e))
+        print(e.orig)
+        print(e.statement)
+
+def update_address(engine,trans_id,postal,district,province):
+    try:
+        with engine.begin() as conn:
+            sql = f"""
+            UPDATE main SET destination_district = '{district}',
+            destination_province = '{province}', postal_code = '{postal}'
+            WHERE transaction_id = '{trans_id}'
+            """
+            
+            conn.execute(text(sql))
+        print("Finished revised postal code, district, and province.")
     except exc.SQLAlchemyError as e:
         print(type(e))
         print(e.orig)
