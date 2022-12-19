@@ -1,31 +1,24 @@
-import mysql.connector
+from datetime import date
+from engine import main_db
+from sqlalchemy import exc, text, bindparam
 import pandas as pd
-import sqlalchemy as db
 
-#connect to data base
-engine = db.create_engine()
-
-my_db, my_cusor = None, None
-
-try:
-    my_db = mysql.connector.connect(host='localhost',
-                                    user = root,
-                                    password=mjkiakk2,
-                                    database='dads_4002')
-    print('Successfully connected to the database.')
-
-    my_cusor = my_db.cursor() #prepare SQL insertion command and a row of data to be inserted
-    
-    # create a string of MySQL insertion command
-    print('----- Execute command -----')
-    sql_command = """select
-	id, product_name, stock from product
-    where  stock < 10
-    order by stock asc;"""
-    my_cusor.execute(sql_command)
-    
-df = pd.read_sql(sql_command,my_db)
-print('\n === df.info () ===')
-_ = display(df.info())
-print('\n === df ===')
-_ = display(df)
+def stock_aleart_greeting(engine):
+    try:
+        stmt = f"""select product.id as product_id
+            ,product_name
+            ,stock
+            ,count(main.product_id) as sale_volume 
+            from product 
+            left join main on main.product_id = product.id 
+            where  product.stock < 10 
+            group by product.id 
+            order by count(main.product_id) desc"""
+        t=text(stmt)
+        df=pd.read_sql(t, con = engine)
+        df.set_index("product_id",inplace=True)
+        print(df)
+    except exc.SQLAlchemyError as e:
+        print(type(e))
+        print(e.orig)
+        print(e.statement)
