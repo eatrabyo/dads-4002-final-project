@@ -5,8 +5,8 @@ from sqlalchemy import exc, text
 
 from engine import main_db
 from insert_func import insert_new_customer,insert_new_transaction
-from query import query_new_customer,query_latest_transaction,query_product_list,query_customer_list,query_product_name,query_stock_by_product_id,query_trans_by_id
-from update_func import update_stock
+from query import query_new_customer,query_latest_transaction,query_product_list,query_customer_list,query_product_name,query_stock_by_product_id,query_trans_by_id,query_total_trans_by_customer
+from update_func import update_cus_status_by_id
 
 def insert_customer_tbl():
     while True:
@@ -205,6 +205,11 @@ def insert_main_tbl():
                     print(e.orig)
                     print(e.statement)
 
+            # update customer status
+            total_trans = query_total_trans_by_customer(main_db,customer_for_this_trans)
+
+            if total_trans > 1:
+                update_cus_status_by_id(main_db,customer_for_this_trans)
             # show new data
             result_df = query_trans_by_id(main_db,new_trans_id)
             print("\n",result_df,"\n")
@@ -220,3 +225,5 @@ def insert_main_tbl():
             continue
         elif loop_to_main == 'n':
             break
+
+# insert new product by old transaction
