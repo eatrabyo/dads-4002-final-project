@@ -24,7 +24,7 @@ def insert_customer_tbl():
                     else:
                         break
                 else:
-                    print('Invalid input')
+                    print("Invalid, please re-enter customer's username and email.")
                     continue
             # check if phone number is correct format
             while True:
@@ -146,7 +146,7 @@ def insert_main_tbl():
                     product_name = query_product_name(main_db,product_for_this_trans)
                     break
                 else:
-                    print("Invalid product_id")
+                    print("Invalid product_id, please re-enter.")
                     continue
                 
             # Price Per Unit
@@ -155,7 +155,7 @@ def insert_main_tbl():
                     price_per_unit = float(input(f"Enter selling price for {product_name}: "))
                     break
                 except:
-                    print('Please enter real number.')
+                    print('Please enter number only.')
 
             # selling unit
             # query old stock
@@ -167,7 +167,7 @@ def insert_main_tbl():
                     if selling_unit > 0:
                         break
                     else:
-                        print('Invalid unit.')
+                        print('Invalid unit, please re-enter.')
                         continue
                 except:
                     print('Please enter integer only.')
@@ -262,10 +262,10 @@ def insert_main_tbl_for_more_prod():
                         if counter_limit > 0:
                             break
                         else:
-                            print('Enter positive integer only')
+                            print('Enter positive integer only.')
                             continue
                     except:
-                        print('Enter integer only.')
+                        print('Please enter integer only.')
                 # counter
                 c = 0
                 product_list = query_product_list(main_db)
@@ -285,7 +285,7 @@ def insert_main_tbl_for_more_prod():
                                 print(f'{edited_trans} already has {product_for_this_trans}.')
                                 continue
                         else:
-                            print("Invalid product_id")
+                            print("Invalid product_id, please re-enter.")
                             continue
 
                     # Price Per Unit
@@ -294,7 +294,7 @@ def insert_main_tbl_for_more_prod():
                             price_per_unit = float(input(f"Enter selling price for {product_name}: "))
                             break
                         except:
-                            print('Please enter real number.')
+                            print('Please enter number only.')
 
                     # selling unit
                     # query old stock
@@ -306,7 +306,7 @@ def insert_main_tbl_for_more_prod():
                             if selling_unit > 0:
                                 break
                             else:
-                                print('Invalid unit.')
+                                print('Invalid unit, please re-enter.')
                                 continue
                         except:
                             print('Please enter integer only.')
