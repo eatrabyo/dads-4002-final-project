@@ -160,3 +160,16 @@ def update_address(engine,trans_id,postal,district,province):
         print(type(e))
         print(e.orig)
         print(e.statement)
+
+def update_cus_status_by_id(engine,customer_id):
+    try:
+        with engine.begin() as conn:
+            sql = f"""
+            UPDATE customer SET old_customer = 1
+            WHERE id = {customer_id}
+            """
+            conn.execute(text(sql))
+    except exc.SQLAlchemyError as e:
+        print(type(e))
+        print(e.orig)
+        print(e.statement)

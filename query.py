@@ -8,6 +8,7 @@ def query_stock_alert(engine):
             where p.stock < 10"""
         t = text(stmt)
         df = pd.read_sql(t, con=engine)
+        df.set_index('product_id',inplace=True)
         return df
     except exc.SQLAlchemyError as e:
         print(type(e))
@@ -118,6 +119,48 @@ def query_product_name(engine,product_id):
         df = pd.read_sql(t, con=engine)
         name = df['product_name'][0]
         return name
+    except exc.SQLAlchemyError as e:
+        print(type(e))
+        print(e.orig)
+        print(e.statement)
+
+def query_new_customer(engine):
+    try:
+        stmt = """SELECT c.id as customer_id, c.customer_user,c.old_customer,c.phone_number,c.email from customer c
+                where c.id = (SELECT max(c2.id) from customer c2)"""
+        t = text(stmt)
+        df = pd.read_sql(t, con=engine)
+        df.set_index('customer_id',inplace=True)
+        return df
+    except exc.SQLAlchemyError as e:
+        print(type(e))
+        print(e.orig)
+        print(e.statement)
+
+def query_latest_transaction(engine):
+    try:
+        stmt = """SELECT m.transaction_id from main m
+            WHERE m.id = (SELECT max(m2.id) from main m2)"""
+        t = text(stmt)
+        df = pd.read_sql(t, con=engine)
+        latest_trans = df['transaction_id'][0]
+        pre_fix, running_trans_id = latest_trans.split('_')
+        return pre_fix, running_trans_id
+    except exc.SQLAlchemyError as e:
+        print(type(e))
+        print(e.orig)
+        print(e.statement)
+
+
+
+def query_total_trans_by_customer(engine,customer_id):
+    try:
+        stmt = f"""SELECT count(m.transaction_id) as total_transacton from main m
+                where m.customer_id = {customer_id}"""
+        t = text(stmt)
+        df = pd.read_sql(t, con=engine)
+        total_trans = df['total_transacton'][0]
+        return total_trans
     except exc.SQLAlchemyError as e:
         print(type(e))
         print(e.orig)
