@@ -26,15 +26,24 @@ stock_aleart_greeting(engine = main_db)
 
 #USER CHOOSING MANU >> add more text to tell user which manu they are in
 print('\n\nPlease select any of the following manu \n 1.Insert data \n 2.Update data \n 3.Delete data \n 4.See report \n 5.Exit')
-user = input('What do you like to do today? (type 1, 2, 3, or 4): ')
 
-if user == 1:
-  print(f'You are now in "Insert Data" page')
-elif user == 2:
-  print(f'You are now in "Update Data" page')
-elif user == 3:
-  print(f'You are now in "Delete Data" page')
-elif user == 4:
-  print(f'You are now in "See report" page')
-else:
-  print(f'Goodbye :)')
+
+while True:
+  user = float(input('What do you like to do today? (type 1, 2, 3, or 4): '))
+  if user == 1:
+    print(f'\nYou are now in "Insert Data" page')
+    break
+  elif user == 2:
+    print(f'\nYou are now in "Update Data" page')
+    break
+  elif user == 3:
+    print(f'\nYou are now in "Delete Data" page')
+    break
+  elif user == 4:
+    print(f'\nYou are now in "See report" page')
+    break
+  elif user == 5:
+    print(f'\nGoodbye :)')
+    break
+  else:
+    print(f'\nPlease enter the correct manu (1-5)')
