@@ -17,8 +17,9 @@ GROUP BY DATE(purchasing_time)
 ORDER BY DATE(purchasing_time) ASC ;"""
         t = text(stmt)
         df = pd.read_sql(t,con=engine)
-        df.set_index('date', inplace = True)
-        return df
+        tot_sale = df['sale'].values[0]
+        return tot_sale
+
     except exc.SQLAlchemyError as e:
         print(type(e))
         print(e.orig)
@@ -58,6 +59,7 @@ GROUP BY DATE(purchasing_time)
 order by Date(purchasing_time) ASC;"""
         t = text(stmt)
         df = pd.read_sql(t,con=engine)
+        df.set_index('date', inplace = True)
         return df
     except exc.SQLAlchemyError as e:
         print(type(e))
@@ -71,7 +73,7 @@ def query_tot_sale_timerange_sum(engine,t_interval,startdate,stopdate=None):
         stopdate = startdate
     try:
         stmt = f"""
-        SELECT sum(ds.sale)
+        SELECT sum(ds.sale)/{t_interval} as avg_sale
 from (
 	SELECT DATE(purchasing_time) as date, SUM(price_per_unit * unit) as sale
 FROM main
@@ -79,7 +81,7 @@ where purchasing_time between DATE_SUB('{startdate}', INTERVAL {t_interval} DAY)
 GROUP BY DATE(purchasing_time)) as ds;"""
         t = text(stmt)
         df = pd.read_sql(t,con=engine)
-        tot_sale = df['sum(ds.sale)'].values[0]
+        tot_sale = df['avg_sale'].values[0]
         return tot_sale
 
     except exc.SQLAlchemyError as e:
@@ -100,6 +102,7 @@ order by sale DESC
 limit 10;"""
         t = text(stmt)
         df = pd.read_sql(t,con=engine)
+        df.set_index('product_name', inplace = True)
         return df
     except exc.SQLAlchemyError as e:
         print(type(e))
@@ -118,11 +121,13 @@ order by sale DESC
 limit 3;"""
         t = text(stmt)
         df = pd.read_sql(t,con=engine)
+        df.set_index('product_category', inplace = True)
         return df
     except exc.SQLAlchemyError as e:
         print(type(e))
         print(e.orig)
         print(e.statement)
+
 
 def query_percentage_change(engine):
     try:
@@ -131,16 +136,17 @@ def query_percentage_change(engine):
 	       SUM(price_per_unit * unit) as p
 	       
 	from main
-	where date(purchasing_time) between {startdate} and {stopdate}
+	where date(purchasing_time) between '{startdate}' and '{stopdate}'
 	GROUP BY DATE(purchasing_time)
-	order by Date(purchasing_time) ASC
-    )
+	order by Date(purchasing_time) ASC 
+)
 
-    select d,p,
-    LAG(p,1) OVER (ORDER BY d) AS previous_sale,
-    p - LAG(p,1) OVER (ORDER BY d) AS DOD_Difference,
-    (p / ( LAG(p,1) OVER (ORDER BY d)) -1) *100 AS 'DOD_Diff(%)'
-    from (net_sale);"""
+select d,p,
+LAG(p,1) OVER (ORDER BY d) AS previous_sale,
+p - LAG(p,1) OVER (ORDER BY d) AS DOD_Difference,
+(p / ( LAG(p,1) OVER (ORDER BY d)) -1) *100 AS 'DOD_Diff(%)'
+from (net_sale);"""
+
 
         t = text(stmt)
         df = pd.read_sql(t,con=engine)
@@ -173,24 +179,25 @@ print('Welcome')
 print(f"Let's see summary of: {startdate}")
 print()
 
-print(f'Total sale of: {startdate}')
+
 df = query_tot_sale_day(main_db,startdate)
-print(df)
+print(f'Total sale = {df}')
 print()
 
-print('sale of previous 7 days')
+print(f'sale of previous 7 days')
 t_interval = 7
 df = query_tot_sale_timerange(main_db,t_interval,startdate)
 print(df)
 print()
 
-print('sale 7 days rolling average')
 df = query_tot_sale_timerange_sum(main_db,t_interval,startdate)
-print(df)
+print(f'7 days rolling average of sale {df}')
+print()
 
-print('sale 30 days rolling average')
+t_interval = 30
 df = query_tot_sale_timerange_sum(main_db,t_interval,startdate)
-print(df)
+print(f'7 days rolling average of sale {df}')
+print()
 
 # #สินค้าขายดี 10 อันดับแรกของวันที่เลือก
 print(f'Top product sale of: {startdate}')
@@ -242,11 +249,13 @@ while True:
 
 # รายการยอดรวม สินค้า ตามวันที่เลือก
 print(f'Sale summary between: {startdate} to {stopdate}')
-df = query_tot_sale_day(main_db,startdate,stopdate)
-print(df)
 
 df = query_tot_sale_day_sum(main_db,startdate,stopdate)
-print(df)
+print(f'Total sale = {df}')
+print()
 
+
+print(f'percentage change in sale: ')
 df = query_percentage_change(main_db)
 print(df)
+
