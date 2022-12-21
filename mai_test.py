@@ -17,6 +17,7 @@ GROUP BY DATE(purchasing_time)
 ORDER BY DATE(purchasing_time) ASC ;"""
         t = text(stmt)
         df = pd.read_sql(t,con=engine)
+        df.set_index('date', inplace = True)
         return df
     except exc.SQLAlchemyError as e:
         print(type(e))
@@ -64,7 +65,7 @@ order by Date(purchasing_time) ASC;"""
         print(e.statement)
 
 
-#รวม#ยอดขายของ ... วันย้อนหลัง แยกตามวัน
+#รวม#ยอดขายของ ... วันย้อนหลัง ยุบรวม
 def query_tot_sale_timerange_sum(engine,t_interval,startdate,stopdate=None):
     if stopdate == None:
         stopdate = startdate
@@ -74,11 +75,13 @@ def query_tot_sale_timerange_sum(engine,t_interval,startdate,stopdate=None):
 from (
 	SELECT DATE(purchasing_time) as date, SUM(price_per_unit * unit) as sale
 FROM main
-where date(purchasing_time) between DATE_SUB('{startdate}', INTERVAL {t_interval} DAY) and '{startdate} 23:59:59'
-GROUP BY DATE(purchasing_time) as ds;"""
+where purchasing_time between DATE_SUB('{startdate}', INTERVAL {t_interval} DAY) and '{startdate} 23:59:59'
+GROUP BY DATE(purchasing_time)) as ds;"""
         t = text(stmt)
         df = pd.read_sql(t,con=engine)
-        return df
+        tot_sale = df['sum(ds.sale)'].values[0]
+        return tot_sale
+
     except exc.SQLAlchemyError as e:
         print(type(e))
         print(e.orig)
@@ -128,17 +131,17 @@ def query_percentage_change(engine):
 	       SUM(price_per_unit * unit) as p
 	       
 	from main
-	where date(purchasing_time) between DATE_SUB('2022-10-20', INTERVAL 7 DAY) and '2022-10-20 23:59:59'
+	where date(purchasing_time) between {startdate} and {stopdate}
 	GROUP BY DATE(purchasing_time)
-	order by Date(purchasing_time) ASC 
-)
+	order by Date(purchasing_time) ASC
+    )
 
+    select d,p,
+    LAG(p,1) OVER (ORDER BY d) AS previous_sale,
+    p - LAG(p,1) OVER (ORDER BY d) AS DOD_Difference,
+    (p / ( LAG(p,1) OVER (ORDER BY d)) -1) *100 AS 'DOD_Diff(%)'
+    from (net_sale);"""
 
-select d,p,
-LAG(p,1) OVER (ORDER BY d) AS previous_sale,
-p - LAG(p,1) OVER (ORDER BY d) AS DOD_Difference,
-(p / ( LAG(p,1) OVER (ORDER BY d)) -1) *100 AS 'DOD_Diff(%)'
-from (net_sale);"""
         t = text(stmt)
         df = pd.read_sql(t,con=engine)
         return df
@@ -160,7 +163,8 @@ def validate(date_text):
 
 ##############################################################
 ##############################################################
-
+import os
+os.system('clear') # 'clear' on mac, for windows 'cls'
 #จะแสดง executive summary มาเลย 
 startdate = '2022-10-10'
 
@@ -212,7 +216,6 @@ while True:
     else:
         print('Wrong menu number.')
         continue
-#print('end')
 
 if report_menu == '1':
     while True:
@@ -223,8 +226,9 @@ if report_menu == '1':
         except:
             print("Invalid date and time format")
             continue
-1
+
     #print('end of date start format prove')
+
 #?? อันนี้อยากให้มัน tab ไปทางขวา 1 ดึ๊บ ตอนนี้มันอยู่นอก if
 while True:
     try:
