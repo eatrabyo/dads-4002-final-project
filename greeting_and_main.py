@@ -44,4 +44,4 @@ while True:
     print(f'\nGoodbye :)')
     break
   else:
-    print(f'\nPlease enter the correct manu (1-5)')
+    print(f'\nPlease enter the correct menu (1-5)')
