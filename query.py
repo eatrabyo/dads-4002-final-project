@@ -57,7 +57,7 @@ def query_product_by_id(engine,product_id):
             where p.id = '{product_id}' """
         t = text(stmt)
         df = pd.read_sql(t, con=engine)
-        df.set_index('product_id',inplace=True)
+        df.set_index1('product_id',inplace=True)
         return df
     except exc.SQLAlchemyError as e:
         print(type(e))

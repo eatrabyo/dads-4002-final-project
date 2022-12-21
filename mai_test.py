@@ -84,9 +84,6 @@ GROUP BY DATE(purchasing_time) as ds;"""
         print(e.orig)
         print(e.statement)
 
-
-
-
 #เลือกสินค้าขายดี 10 อันดับแรก
 def query_top_sale_product(engine):
     try:
@@ -124,6 +121,32 @@ limit 3;"""
         print(e.orig)
         print(e.statement)
 
+def query_percentage_change(engine):
+    try:
+        stmt = f"""with net_sale as (
+	SELECT date(purchasing_time) as d,
+	       SUM(price_per_unit * unit) as p
+	       
+	from main
+	where date(purchasing_time) between DATE_SUB('2022-10-20', INTERVAL 7 DAY) and '2022-10-20 23:59:59'
+	GROUP BY DATE(purchasing_time)
+	order by Date(purchasing_time) ASC 
+)
+
+
+select d,p,
+LAG(p,1) OVER (ORDER BY d) AS previous_sale,
+p - LAG(p,1) OVER (ORDER BY d) AS DOD_Difference,
+(p / ( LAG(p,1) OVER (ORDER BY d)) -1) *100 AS 'DOD_Diff(%)'
+from (net_sale);"""
+        t = text(stmt)
+        df = pd.read_sql(t,con=engine)
+        return df
+    except exc.SQLAlchemyError as e:
+        print(type(e))
+        print(e.orig)
+        print(e.statement)
+
 ##############################################################
 #function check date time format
 import datetime
@@ -134,11 +157,56 @@ def validate(date_text):
         raise ValueError("Incorrect data format, should be YYYY-MM-DD")
     return('correct')
 
+
+##############################################################
+##############################################################
+
+#จะแสดง executive summary มาเลย 
+startdate = '2022-10-10'
+
+#อยากใส่ชื่ออ่ะ Welcome = "name" ของคนที่ login
+print('Welcome')
+print(f"Let's see summary of: {startdate}")
+print()
+
+print(f'Total sale of: {startdate}')
+df = query_tot_sale_day(main_db,startdate)
+print(df)
+print()
+
+print('sale of previous 7 days')
+t_interval = 7
+df = query_tot_sale_timerange(main_db,t_interval,startdate)
+print(df)
+print()
+
+print('sale 7 days rolling average')
+df = query_tot_sale_timerange_sum(main_db,t_interval,startdate)
+print(df)
+
+print('sale 30 days rolling average')
+df = query_tot_sale_timerange_sum(main_db,t_interval,startdate)
+print(df)
+
+# #สินค้าขายดี 10 อันดับแรกของวันที่เลือก
+print(f'Top product sale of: {startdate}')
+df = query_top_sale_product(main_db)
+print(df)
+print()
+
+# #หมวดหมู่สินค้าขายดี 3 อันดับแรกของวันที่เลือก
+print(f'Top 3 category sale of: {startdate}')
+df = query_top_sale_cate(main_db)
+print(df)
+print()
+
+
 ##############################################################
 #เลือก menu
+print('To explore further?')
 while True:
+    print('report menu: \n 1. sale report (pick your own time range)  \n 2.  \n 3. exit')
     report_menu = input('Please enter menu number: ')
-    print('report menu: \n 1. summary report \n 2. sale report \n 3. exit')
     if report_menu in ['1','2','3']:
         break 
     else:
@@ -146,102 +214,35 @@ while True:
         continue
 #print('end')
 
-##############################################################
-#summary report
 if report_menu == '1':
-    
-    #select date
     while True:
         try:
-            # startdate = input('Date: (yyyy-mm-dd)')
-            startdate = '2022-10-10'
+            startdate = input('Start date: (yyyy-mm-dd)')
             validate(startdate)
             break
         except:
             print("Invalid date and time format")
             continue
+1
     #print('end of date start format prove')
+#?? อันนี้อยากให้มัน tab ไปทางขวา 1 ดึ๊บ ตอนนี้มันอยู่นอก if
+while True:
+    try:
+        stopdate = input('Stop date: (yyyy-mm-dd)')
+        validate(stopdate)
+        break
+    except:
+        print("Invalid date and time format")
+        continue
+    #print('end of date stop format prove')
 
+# รายการยอดรวม สินค้า ตามวันที่เลือก
+print(f'Sale summary between: {startdate} to {stopdate}')
+df = query_tot_sale_day(main_db,startdate,stopdate)
+print(df)
 
+df = query_tot_sale_day_sum(main_db,startdate,stopdate)
+print(df)
 
-#จะแสดง executive summary มาเลย ไม่ต้องเลือกอะไรนอกจากวัน
-    #function > sale summary ของ วันที่เลือก
-    #ยอดขายรวมของวันที่เลือก
-    print(f'Sale summary of: {startdate}')
-    print()
-    
-    print(f'Total sale of: {startdate}')
-    df = query_tot_sale_day(main_db,startdate)
-    print(df)
-    print()
-
-
-    # #ยอดขายรวม 7 วันย้อนหลัง นับจากวันที่เลือก
-    #df = query_tot_sale_week(main_db,t_interval,startdate)
-    # print(df)
-
-    print('sale of previous 7 days')
-    t_interval = 7
-    df = query_tot_sale_timerange(main_db,t_interval,startdate)
-    print(df)
-    print()
-   
-    print('sale 7 days rolling average')
-    df = query_tot_sale_timerange_sum(main_db,t_interval,startdate)
-    print(df)
-
-     #ยอดขายรวม 30 วันย้อนหลัง นับจากวันที่เลือก << เวิ่นเว้อไปหน่อย ตัดทิ้ง
-    # print('sale of previous 30 days')
-    # t_interval = 30
-    # df = query_tot_sale_timerange(main_db,t_interval,startdate)
-    # print(df)
-    # print()
-   
-    print('sale 30 days rolling average')
-    df = query_tot_sale_timerange_sum(main_db,t_interval,startdate)
-    print(df)
-
-    # #สินค้าขายดี 10 อันดับแรกของวันที่เลือก
-    print(f'Top product sale of: {startdate}')
-    df = query_top_sale_product(main_db)
-    print(df)
-    print()
-
-    # #หมวดหมู่สินค้าขายดี 3 อันดับแรกของวันที่เลือก
-    print(f'Top 3 category sale of: {startdate}')
-    df = query_top_sale_cate(main_db)
-    print(df)
-    print()
-
-
-####################
-#menu อื่นๆ เลือก ช่วงเวลาได้
-    #select date
-# if report_menu == '2':
-#     while True:
-#         try:
-#             date_start = input('Start date: (yyyy-mm-dd)')
-#             validate(date_start)
-#             break
-#         except:
-#             print("Invalid date and time format")
-#             continue
-# 1
-#     #print('end of date start format prove')
-#     # 
-#     while True:
-#         try:
-#             stopdate = input('Stop date: (yyyy-mm-dd)')
-#             validate(stopdate)
-#             break
-#         except:
-#             print("Invalid date and time format")
-#             continue
-#     #print('end of date stop format prove')
-
-#     # รายการยอดรวม สินค้า ตามวันที่เลือก
-#     print(f'Sale summary of: {startdate} to {stopdate}')
-#     df = query_tot_sale_day(main_db,startdate,stopdate)
-#     print(df)
-#     df = query_tot_sale_day_sum(main_db,startdate,stopdate)
-#     print(df)
+df = query_percentage_change(main_db)
+print(df)
