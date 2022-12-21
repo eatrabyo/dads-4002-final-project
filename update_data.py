@@ -13,7 +13,7 @@ def update_customer_tbl():
         os.system('clear') # 'clear' on mac, for windows 'cls'
         try:
             # asking user for which customer_id to update
-            customer_id = int(input("Please enter customer_id: "))
+            customer_id = int(input("Please enter customer id: "))
             cus_list = query_customer_list(main_db)
 
             # check if user input have match with in our db
@@ -30,7 +30,7 @@ def update_customer_tbl():
                     if cus_update_menu_num in ['1','2','3']:
                         break
                     else:
-                        print('Wrong menu number.')
+                        print('Wrong menu number, please re-enter.')
                         continue
 
                 if cus_update_menu_num == '1':
@@ -70,7 +70,7 @@ def update_customer_tbl():
             else:
                 raise
         except:
-            print("Please enter valid customer_id")
+            print("Please enter valid customer id.")
             continue
 
         # loop for asking update more or no
@@ -119,7 +119,7 @@ def update_product_tbl():
                             new_stock = int(input('Enter new stock value: '))
                             break
                         except:
-                            print("Please enter only integer number")
+                            print("Please enter integer number only.")
                             continue
 
                     # update new data to our db
@@ -135,10 +135,10 @@ def update_product_tbl():
                             if new_cost != 0:
                                 break
                             else:
-                                print('Please enter only number')
+                                print('Please enter only number.')
                                 continue
                         except:
-                            print("Please enter only number")
+                            print("Please enter only number.")
                             continue
 
                     # update new data to our db
@@ -198,7 +198,7 @@ def update_main_tbl():
                     if product_update_menu_num in ['1','2','3','4','5','6','7']:
                         break
                     else:
-                        print('Wrong menu number.')
+                        print('Wrong menu number, please re-enter.')
                         continue
                 
                 # Product id menu
@@ -214,12 +214,12 @@ def update_main_tbl():
                                 break
                             else:
                                 os.system('clear') # 'clear' on mac, for windows 'cls'
-                                print(f'Please enter valid row id for {trans_id}\n')
+                                print(f'Please enter valid row id for {trans_id}.\n')
                                 print(trans_df)
                                 continue
                         except:
                             os.system('clear') # 'clear' on mac, for windows 'cls'
-                            print(f'Please enter valid row id for {trans_id}\n')
+                            print(f'Please enter valid row id for {trans_id}.\n')
                             print(trans_df)
                             continue
                     
@@ -281,7 +281,7 @@ def update_main_tbl():
                             format_datetime = datetime.datetime.strptime(edited_datetime,"%Y-%m-%d %H:%M")
                             break
                         except:
-                            print("Invalid date and time format")
+                            print("Invalid date and time format, please re-enter.")
                             continue
                     # update new data
                     update_purchasing_time_main(engine=main_db,trans_id=trans_id,purchasing_time=format_datetime)
@@ -302,12 +302,12 @@ def update_main_tbl():
                                 break
                             else:
                                 os.system('clear') # 'clear' on mac, for windows 'cls'
-                                print(f'Please enter valid row id for {trans_id}\n')
+                                print(f'Please enter valid row id for {trans_id}.\n')
                                 print(trans_df)
                                 continue
                         except:
                             os.system('clear') # 'clear' on mac, for windows 'cls'
-                            print(f'Please enter valid row id for {trans_id}\n')
+                            print(f'Please enter valid row id for {trans_id}.\n')
                             print(trans_df)
                             continue
                     
@@ -341,12 +341,12 @@ def update_main_tbl():
                                 break
                             else:
                                 os.system('clear') # 'clear' on mac, for windows 'cls'
-                                print(f'Please enter valid row id for {trans_id}\n')
+                                print(f'Please enter valid row id for {trans_id}\n.')
                                 print(trans_df)
                                 continue
                         except:
                             os.system('clear') # 'clear' on mac, for windows 'cls'
-                            print(f'Please enter valid row id for {trans_id}\n')
+                            print(f'Please enter valid row id for {trans_id}\n.')
                             print(trans_df)
                             continue
                     
@@ -370,7 +370,7 @@ def update_main_tbl():
                             if edited_unit > 0:
                                 break
                             else:
-                                print('Invalid unit')
+                                print('Invalid unit, please re-enter.')
                                 continue
                         except:
                             print('Please enter integer only.')

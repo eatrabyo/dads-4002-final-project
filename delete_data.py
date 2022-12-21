@@ -28,12 +28,12 @@ def delete_transaction_tbl():
                                 break
                             else:
                                 os.system('clear') # 'clear' on mac, for windows 'cls'
-                                print(f'Please enter valid row id for {trans_id}\n')
+                                print(f'Please enter valid row id for {trans_id}.\n')
                                 print(trans_df)
                                 continue
                         except:
                             os.system('clear') # 'clear' on mac, for windows 'cls'
-                            print(f'Please enter valid row id for {trans_id}\n')
+                            print(f'Please enter valid row id for {trans_id}.\n')
                             print(trans_df)
                             continue
                 # delete that row
