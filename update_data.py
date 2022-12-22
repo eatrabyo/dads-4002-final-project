@@ -1,10 +1,11 @@
 import os
 import datetime
+import pandas as pd
 
-from query import query_customer_by_id, query_customer_list,query_product_list,query_product_by_id,query_trans_id_list,query_trans_by_id
+from query import query_customer_by_id, query_customer_list,query_product_list,query_product_by_id,query_trans_id_list,query_trans_by_id,query_stock_by_product_id,query_product_name
 from engine import main_db
 from update_func import update_email,update_phone,update_stock,update_prod_cost,update_product_main,update_customer_main,update_purchasing_time_main,update_product_price_main,\
-    update_product_unit_main
+    update_product_unit_main,update_address
 
 # update customer table menu
 def update_customer_tbl():
@@ -12,7 +13,7 @@ def update_customer_tbl():
         os.system('cls') # 'clear' on mac, for windows 'cls'
         try:
             # asking user for which customer_id to update
-            customer_id = int(input("Please enter customer_id: "))
+            customer_id = int(input("Please enter customer id: "))
             cus_list = query_customer_list(main_db)
 
             # check if user input have match with in our db
@@ -29,14 +30,14 @@ def update_customer_tbl():
                     if cus_update_menu_num in ['1','2','3']:
                         break
                     else:
-                        print('Wrong menu number.')
+                        print('Wrong menu number, please re-enter.')
                         continue
 
                 if cus_update_menu_num == '1':
 
                     # check if phone number have length of 11 and start with 66
                     while True:
-                        new_phone = input('Enter new phone number: ')
+                        new_phone = input('Enter new phone number in format (replace 0 with 66): ')
                         if len(new_phone) == 11 and new_phone.startswith('66',0,2) == True:
                             break
                         else:
@@ -69,7 +70,7 @@ def update_customer_tbl():
             else:
                 raise
         except:
-            print("Please enter valid customer_id")
+            print("Please enter valid customer id.")
             continue
 
         # loop for asking update more or no
@@ -118,7 +119,7 @@ def update_product_tbl():
                             new_stock = int(input('Enter new stock value: '))
                             break
                         except:
-                            print("Please enter only integer number")
+                            print("Please enter integer number only.")
                             continue
 
                     # update new data to our db
@@ -134,10 +135,10 @@ def update_product_tbl():
                             if new_cost != 0:
                                 break
                             else:
-                                print('Please enter only number')
+                                print('Please enter only number.')
                                 continue
                         except:
-                            print("Please enter only number")
+                            print("Please enter only number.")
                             continue
 
                     # update new data to our db
@@ -167,17 +168,17 @@ def update_product_tbl():
 
 # update main table
 while True:
-    os.system('cls') # 'clear' on mac, for windows 'cls'
+    os.system('clear') # 'clear' on mac, for windows 'cls'
     try:
         # asking user which transaction to update
         trans_id = input('Please enter transaction id: ')
         trans_list = query_trans_id_list(main_db)
 
-        # check if transaction id match from our db
-        if trans_id in trans_list:
+            # check if transaction id match from our db
+            if trans_id in trans_list:
 
-            #query customer info base on id
-            trans_df = query_trans_by_id(main_db,trans_id)
+                #query transaction info base on id
+                trans_df = query_trans_by_id(main_db,trans_id)
 
             # list for store primary key
             main_tbl_id = trans_df.reset_index()['id'].to_list()
@@ -199,7 +200,7 @@ while True:
             
             # Product id menu
             if product_update_menu_num == '1':
-                os.system('cls') # 'clear' on mac, for windows 'cls'
+                os.system('clear') # 'clear' on mac, for windows 'cls'
                 print(trans_df)
 
                 # check if user input row_id match with list of primary key
@@ -209,12 +210,12 @@ while True:
                         if row_id in main_tbl_id:
                             break
                         else:
-                            os.system('cls') # 'clear' on mac, for windows 'cls'
+                            os.system('clear') # 'clear' on mac, for windows 'cls'
                             print(f'Please enter valid row id for {trans_id}\n')
                             print(trans_df)
                             continue
                     except:
-                        os.system('cls') # 'clear' on mac, for windows 'cls'
+                        os.system('clear') # 'clear' on mac, for windows 'cls'
                         print(f'Please enter valid row id for {trans_id}\n')
                         print(trans_df)
                         continue
@@ -239,7 +240,7 @@ while True:
                 
             # customer id menu
             elif product_update_menu_num == '2':
-                os.system('cls') # 'clear' on mac, for windows 'cls'
+                os.system('clear') # 'clear' on mac, for windows 'cls'
                 print(trans_df)
 
                 customer_list = query_customer_list(main_db)
@@ -263,27 +264,27 @@ while True:
             
             # purchasing time menu
             elif product_update_menu_num == '3':
-                os.system('cls') # 'clear' on mac, for windows 'cls'
+                os.system('clear') # 'clear' on mac, for windows 'cls'
                 print(trans_df)
 
-                # check user input is correct datetime format
-                while True:
-                    try:
-                        edited_datetime = input("Enter revised date and time in format (YYYY-MM-DD hh:mm): ")
-                        format_datetime = datetime.datetime.strptime(edited_datetime,"%Y-%m-%d %H:%M")
-                        break
-                    except:
-                        print("Invalid date and time format")
-                        continue
-                # update new data
-                update_purchasing_time_main(engine=main_db,trans_id=trans_id,purchasing_time=format_datetime)
-                # show new data
-                new_trans_df = query_trans_by_id(main_db,trans_id)
-                print('\n',new_trans_df)
+                    # check user input is correct datetime format
+                    while True:
+                        try:
+                            edited_datetime = input("Enter revised date and time in format (YYYY-MM-DD hh:mm): ")
+                            format_datetime = datetime.datetime.strptime(edited_datetime,"%Y-%m-%d %H:%M")
+                            break
+                        except:
+                            print("Invalid date and time format, please re-enter.")
+                            continue
+                    # update new data
+                    update_purchasing_time_main(engine=main_db,trans_id=trans_id,purchasing_time=format_datetime)
+                    # show new data
+                    new_trans_df = query_trans_by_id(main_db,trans_id)
+                    print('\n',new_trans_df)
 
             # Price per unit menu
             elif product_update_menu_num == '4':
-                os.system('cls') # 'clear' on mac, for windows 'cls'
+                os.system('clear') # 'clear' on mac, for windows 'cls'
                 print(trans_df)
 
                 # check if user input row_id match with list of primary key
@@ -293,12 +294,12 @@ while True:
                         if row_id in main_tbl_id:
                             break
                         else:
-                            os.system('cls') # 'clear' on mac, for windows 'cls'
+                            os.system('clear') # 'clear' on mac, for windows 'cls'
                             print(f'Please enter valid row id for {trans_id}\n')
                             print(trans_df)
                             continue
                     except:
-                        os.system('cls') # 'clear' on mac, for windows 'cls'
+                        os.system('clear') # 'clear' on mac, for windows 'cls'
                         print(f'Please enter valid row id for {trans_id}\n')
                         print(trans_df)
                         continue
@@ -322,7 +323,7 @@ while True:
                 
             # Unit menu
             elif product_update_menu_num == '5':
-                os.system('cls') # 'clear' on mac, for windows 'cls'
+                os.system('clear') # 'clear' on mac, for windows 'cls'
                 print(trans_df)
 
                 # check if user input row_id match with list of primary key
@@ -332,12 +333,12 @@ while True:
                         if row_id in main_tbl_id:
                             break
                         else:
-                            os.system('cls') # 'clear' on mac, for windows 'cls'
+                            os.system('clear') # 'clear' on mac, for windows 'cls'
                             print(f'Please enter valid row id for {trans_id}\n')
                             print(trans_df)
                             continue
                     except:
-                        os.system('cls') # 'clear' on mac, for windows 'cls'
+                        os.system('clear') # 'clear' on mac, for windows 'cls'
                         print(f'Please enter valid row id for {trans_id}\n')
                         print(trans_df)
                         continue
@@ -359,36 +360,55 @@ while True:
                 new_trans_df = query_trans_by_id(main_db,trans_id,row_id=row_id)
                 print('\n',new_trans_df)
 
-            # Destination district menu
-            elif product_update_menu_num == '6':
-                pass
+                # Postal 
+                elif product_update_menu_num == '6':
+                    os.system('clear') # 'clear' on mac, for windows 'cls'
+                    print(trans_df)
 
-            # Destination province menu
-            elif product_update_menu_num == '7':
-                pass
+                    # get postal code
+                    address_ref = pd.read_csv('district_province_ref.csv')
+                    postal_list = address_ref['postal_code'].to_list()
 
-            # Postal code menu
-            elif product_update_menu_num == '8':
-                pass
+                    # check if postal code is valid
+                    while True:
+                        try:
+                            edited_postal = int(input(f"Enter revised postal code: "))
+                            if edited_postal in postal_list:
+                                # get new district and province from csv file
+                                new_district = address_ref.loc[address_ref['postal_code'] == edited_postal,'district'].values[0]
+                                new_province = address_ref.loc[address_ref['postal_code'] == edited_postal,'province'].values[0]
+                                break
+                            else:
+                                print('Please enter valid postal code.')
+                                continue
+                        except:
+                            print('Please enter valid postal code.')
+                    
+                    # update new data
+                    update_address(engine=main_db, trans_id=trans_id,postal=edited_postal,district=new_district,province=new_province)
 
-            # Exit menu
-            elif product_update_menu_num == '9':
-                break
-        else:
-            raise
-    except:
-        print('Please enter valid transaction id.')
-        continue
-    # loop for asking update more or no
-    while True:
-        loop_to_main = input("Would you like to update more? (Y/N): ").lower()
-        if loop_to_main in ['y','n']:
-            break
-        else:
+                    # print new data
+                    new_trans_df = query_trans_by_id(main_db,trans_id)
+                    print('\n',new_trans_df)
+                    
+                # Exist menu
+                elif product_update_menu_num == '7':
+                    break
+            else:
+                raise
+        except:
+            print('Please enter valid transaction id.')
             continue
-    if loop_to_main == 'y':
-        continue
-    elif loop_to_main == 'n':
-        break
+        # loop for asking update more or no
+        while True:
+            loop_to_main = input("Would you like to update more? (Y/N): ").lower()
+            if loop_to_main in ['y','n']:
+                break
+            else:
+                continue
+        if loop_to_main == 'y':
+            continue
+        elif loop_to_main == 'n':
+            break
 
-update_customer_tbl()
+
