@@ -39,3 +39,24 @@ def main(user):
                 print(f'\nGoodbye :)')
         else:
             print(f'\nPlease enter the correct menu (1-5)')
+
+#check password
+def login():
+    try:
+        stmt = """SELECT * FROM dads_4002.admin_info"""
+        t=text(stmt)
+        df = pd.read_sql(t,con=main_db)
+        dict_user=dict(zip(df['admin_username'],df['admin_password']))
+        while True:
+            user_name = input(f'Please enter your username: ' )
+            user_password = input(f'Please enter your password: ')
+            if (user_name,user_password) in dict_user.items():
+                print('------ LOG IN SUCCESSFULLY ------')
+                break
+            else:
+                print(f'\nPlease enter the correct username and password!!')
+                continue
+    except exc.SQLAlchemyError as e:
+        print(type(e))
+        print(e.orig)
+        print(e.statement)

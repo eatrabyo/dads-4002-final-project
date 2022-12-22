@@ -2,23 +2,12 @@ from datetime import date
 from engine import main_db
 from sqlalchemy import exc, text, bindparam
 import pandas as pd
-from greeting_and_main_func import stock_aleart_greeting, main
+from greeting_and_main_func import stock_aleart_greeting, main, login
 
 #Greeting
 print('\033[\n\n+1m'+'**** Welcome to Stock management DADs4002 ****'+'\033[0m')
-
-## LOG IN >> add check if user is correct matching from table
-user_name_input = ''
-password_input=''
-while True:
-  if user_name_input != 'eatjung' and password_input != '9999':
-    print('\nPlease enter the correct username and password:')
-    user_name_input=str(input(f'▪ Please enter your username: ')).lower()
-    password_input=str(input(f'▪ Please enter your password: '))
-  else:
-    break
-print('------ LOG IN SUCCESSFULLY ------')
-
+#login and check password
+login()
 
 # STOCK ALERT
 print(f'\n----- STOCK ALERT ON {date.today()} -----')
