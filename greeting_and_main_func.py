@@ -1,7 +1,11 @@
-from datetime import date
-from engine import main_db
-from sqlalchemy import exc, text, bindparam
+from datetime import date, datetime
+import os
+from sqlalchemy import exc, text
 import pandas as pd
+
+from engine import main_db
+
+
 
 def stock_aleart_greeting(engine):
     try:
@@ -17,32 +21,19 @@ def stock_aleart_greeting(engine):
         t=text(stmt)
         df=pd.read_sql(t, con = engine)
         df.set_index("product_id",inplace=True)
+        print(f'\n----- STOCK ALERT ON {date.today()} -----')
         print(df)
     except exc.SQLAlchemyError as e:
         print(type(e))
         print(e.orig)
         print(e.statement)
 
-def main(user):
-    ##while True:
-        user = input('What do you like to do today? (type 1, 2, 3, 4, or 5): ')
-        if user in ['1','2','3','4','5']:
-            if user == '1':
-                print(f'\nYou are now in "Insert Data" page')
-            elif user == '2':
-                print(f'\nYou are now in "Update Data" page')
-            elif user == '3':
-                print(f'\nYou are now in "Delete Data" page')
-            elif user == '4':
-                print(f'\nYou are now in "See report" page')
-            elif user == '5':
-                print(f'\nGoodbye :)')
-        else:
-            print(f'\nPlease enter the correct menu (1-5)')
+
 
 #check password
 def login():
     try:
+        os.system('cls')
         stmt = """SELECT * FROM dads_4002.admin_info"""
         t=text(stmt)
         df = pd.read_sql(t,con=main_db)
@@ -52,11 +43,17 @@ def login():
             user_password = input(f'Please enter your password: ')
             if (user_name,user_password) in dict_user.items():
                 print('------ LOG IN SUCCESSFULLY ------')
-                break
+                auth = True
+                login_time = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+                break              
             else:
                 print(f'\nPlease enter the correct username and password!!')
-                continue
+                continue               
+        return auth, login_time, user_name    
     except exc.SQLAlchemyError as e:
         print(type(e))
         print(e.orig)
         print(e.statement)
+
+x,y,z=login()
+print(x,y,z)
