@@ -1,18 +1,19 @@
-from datetime import datetime
+import datetime as dt
 import os
 
+
 from engine import main_db
-from greeting_and_main_func import stock_aleart_greeting, login
+import greeting_and_main_func as gtfc
 from insert_data import insert_customer_tbl
 
 def main():
 #Greeting
     os.system('cls')
     print('\033[\n\n+1m'+'**** Welcome to Stock management DADs4002 ****'+'\033[0m')
-    auth, login_time, user_name = login()
+    auth, login_time, user_name = gtfc.login()
     
     if auth == True: 
-        stock_aleart_greeting(main_db)
+        gtfc.stock_aleart_greeting(main_db)
         while True:
             while True:
                 print('\n\nPlease select any of the following manu \n 1.Insert data \n 2.Update data \n 3.Delete data \n 4.See report \n 5.Exit')
@@ -101,7 +102,7 @@ def main():
                 print('\nGoodbye :)')
                 break
         
-        logout_time = datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+        logout_time = dt.now().strftime('%d/%m/%Y %H:%M:%S')
         ##logbook=
              
 main()
