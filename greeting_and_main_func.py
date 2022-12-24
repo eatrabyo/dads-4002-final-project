@@ -2,40 +2,40 @@ from datetime import date, datetime
 import os
 from sqlalchemy import exc, text
 import pandas as pd
+from tabulate import tabulate
 
 from engine import main_db
 
 def stock_aleart_greeting(engine):
-    ##try:
+    try:
         os.system('cls') 
-        stmt = f"""select product_id,
-product.product_name,
-stock,
-count(main.product_id) as sales_vol
-from main
-left join product on product.id = main.product_id
-where stock < 10
-group by product_id
-order by stock asc;
+        stmt = """
 
-SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
+select
+	product.id, product_name, stock, count(main.product_id) as sale_vol 
+    from product
+    left join main on product.id = main.product_id 
+    where  stock < 10
+    group by product.id
+    order by stock asc;
+
 """
         t=text(stmt)
-        df=pd.read_sql(t, con = engine)
-        df.set_index("product_id",inplace=True)
+        df=pd.read_sql(t,con=main_db)
+        table = df.set_index("id",inplace=True)
         print(f'\n----- STOCK ALERT ON {date.today()} -----')
-        print(df)
+        print(tabulate(df, headers='keys', tablefmt='psql'))
     
-    #except exc.SQLAlchemyError as e:
-     #   print(type(e))
-      #  print(e.orig)
-     #   print(e.statement)
+    except exc.SQLAlchemyError as e:
+        print(type(e))
+        print(e.orig)
+        print(e.statement)
 
 
 
 #check password
 def login():
-    #try:
+    try:
         os.system('cls')
         stmt = """SELECT * FROM dads_4002.admin_info"""
         t=text(stmt)
@@ -54,9 +54,9 @@ def login():
                 print(f'\nPlease enter the correct username and password!!')
                 continue               
         return auth, login_time, user_name    
-    #except exc.SQLAlchemyError as e:
-        #print(type(e))
-        #print(e.orig)
-        ##print(e.statement)
+    except exc.SQLAlchemyError as e:
+        print(type(e))
+        print(e.orig)
+        print(e.statement)
 
 stock_aleart_greeting(main_db)
