@@ -105,14 +105,12 @@ def main():
                 break
         
         logout_time = dt.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
-        header = pd.DataFrame([[user_name,login_time,logout_time]], columns=['USER','IN','OUT'])
         t1 = dt.datetime.strptime(login_time, "%d/%m/%Y %H:%M:%S")
         t2 = dt.datetime.strptime(logout_time, "%d/%m/%Y %H:%M:%S")
         ##logbook=
         
     with open('RecordData.txt', 'a', encoding='utf-8') as myfile:    
         myfile.writelines(f'\n\nUSER: {user_name}\nIN: {login_time}\nOUT: {logout_time}\nTotal time spent: {t2-t1}')
-
-        #table = dfrecord.set_index("id",inplace=True)
+    gtfc.backup_all_data()
 
 main()  
