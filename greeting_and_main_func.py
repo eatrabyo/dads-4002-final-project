@@ -8,9 +8,8 @@ from engine import main_db
 
 def stock_aleart_greeting(engine):
     try:
-        os.system('cls') 
+        ## os.system('cls') 
         stmt = """
-
 select
 	product.id, product_name, stock, count(main.product_id) as sale_vol 
     from product
@@ -18,13 +17,15 @@ select
     where  stock < 10
     group by product.id
     order by stock asc;
-
 """
         t=text(stmt)
         df=pd.read_sql(t,con=main_db)
         table = df.set_index("id",inplace=True)
         print(f'\n----- STOCK ALERT ON {date.today()} -----')
         print(tabulate(df, headers='keys', tablefmt='psql'))
+        safety_stock = 10
+
+
     
     except exc.SQLAlchemyError as e:
         print(type(e))
@@ -58,5 +59,3 @@ def login():
         print(type(e))
         print(e.orig)
         print(e.statement)
-
-stock_aleart_greeting(main_db)
