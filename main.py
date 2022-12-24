@@ -12,7 +12,7 @@ def main():
     print('\033[\n\n+1m'+'**** Welcome to Stock management DADs4002 ****'+'\033[0m')
     auth, login_time, user_name = gtfc.login()
     
-    if auth == True: 
+    if auth == True:
         gtfc.stock_aleart_greeting(main_db)
         while True:
             while True:
