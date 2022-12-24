@@ -24,9 +24,10 @@ select
         print(f'\n----- STOCK ALERT ON {date.today()} -----')
         print(tabulate(df, headers='keys', tablefmt='psql'))
         safety_stock = 10
-
-
-    
+        while True:
+            ack = input('\nPlease READ stock alert and acknowledge (type a to acknowledge): ').lower()
+            if ack == 'a':
+                break
     except exc.SQLAlchemyError as e:
         print(type(e))
         print(e.orig)
