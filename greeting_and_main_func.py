@@ -41,9 +41,6 @@ select
         print(e.orig)
         print(e.statement)
 
-stock_aleart_greeting(main_db)
-
-
 #check password
 def login():
     try:
