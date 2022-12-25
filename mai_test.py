@@ -4,19 +4,23 @@ from engine import main_db
 from report_func import *
 
 
-os.system('clear') # 'clear' on mac, for windows 'cls'
+
 #จะแสดง executive summary มาเลย 
 startdate = '2022-10-10'
 #อยากใส่ชื่ออ่ะ Welcome = "name" ของคนที่ login
 
-
+os.system('clear') # 'clear' on mac, for windows 'cls'
 print('Welcome')
 print(f"Let's see summary of: {startdate}")
 print()
 
 
 df = query_tot_sale_day_sum(main_db,startdate)
-print(f'Total sale = {df}')
+print(f'Total sale = {df} baht')
+print()
+
+df=query_avr_basket(main_db,startdate,stopdate=None)
+print(f'Average basket size = {df} baht')
 print()
 
 print(f'sale of previous 7 days:')
@@ -26,11 +30,11 @@ print(df)
 print()
 
 df = query_tot_sale_timerange_sum(main_db,t_interval,startdate)
-print(f'7 days rolling average of sale: {df}')
+print(f'7 days rolling average of sale: {df} baht')
 
 t_interval = 30
 df = query_tot_sale_timerange_sum(main_db,t_interval,startdate)
-print(f'30 days rolling average of sale: {df}')
+print(f'30 days rolling average of sale: {df} baht')
 print()
 
 # สินค้าขายดี 10 อันดับแรกของวันที่เลือก
@@ -85,15 +89,17 @@ while True:
 
         if startdate > stopdate:
             startdate , stopdate = stopdate , startdate
-            print(f'Since startdate greater than stopdate, interchange its value')
-            print(f' new start date: {startdate}')
-            print(f' new start date: {stopdate}')
+            print(f'Since startdate greater than stopdate, we interchange its value.')
+            print(f'> new start date: {startdate}')
+            print(f'> new stop date: {stopdate}')
+            print()
+
 
         # รายการยอดรวม สินค้า ตามวันที่เลือก
         print(f'Sale summary between: {startdate} to {stopdate}')
 
         df = query_tot_sale_day_sum(main_db,startdate,stopdate)
-        print(f'Total sale = {df}')
+        print(f'Total sale = {df} baht')
         print()
 
         df = query_tot_sale_timerange(main_db,startdate,stopdate)
@@ -102,7 +108,7 @@ while True:
         print()
 
         df=query_avr_basket(main_db,startdate,stopdate=None)
-        print(df)
+        print(f'Average basket size = {df} baht')
         print()
 
 #############
@@ -113,7 +119,7 @@ while True:
             else:
                 continue
 
-        if user_input == 'y':
+        #if user_input == 'y':
             #############
 
 
@@ -141,9 +147,11 @@ while True:
 
         if startdate > stopdate:
             startdate , stopdate = stopdate , startdate
-            print(f'Since startdate greater than stopdate, interchange its value')
-            print(f' new start date: {startdate}')
-            print(f' new start date: {stopdate}')
+            print(f'Since startdate greater than stopdate, we interchange its value.')
+            print(f'> new start date: {startdate}')
+            print(f'> new stop date: {stopdate}')
+            print()
+
 
         # สินค้าขายดี 10 อันดับแรกของวันที่เลือก
         print(f'Top product sale:')
@@ -173,7 +181,7 @@ while True:
             else:
                 continue
 
-        if user_input == 'y':
+        #if user_input == 'y':
             #############
 
 
@@ -202,9 +210,11 @@ while True:
 
         if startdate > stopdate:
             startdate , stopdate = stopdate , startdate
-            print(f'Since startdate greater than stopdate, interchange its value')
-            print(f' new start date: {startdate}')
-            print(f' new start date: {stopdate}')
+            print(f'Since startdate greater than stopdate, we interchange its value.')
+            print(f'> new start date: {startdate}')
+            print(f'> new stop date: {stopdate}')
+            print()
+
 
         print(f'percentage change in sale: ')
         print(f'day on day different')
@@ -219,7 +229,7 @@ while True:
             else:
                 continue
 
-        if user_input == 'y':
+        #if user_input == 'y':
             #############
 
     #CRM
@@ -248,9 +258,10 @@ while True:
 
         if startdate > stopdate:
             startdate , stopdate = stopdate , startdate
-            print(f'Since startdate greater than stopdate, interchange its value')
-            print(f' new start date: {startdate}')
-            print(f' new start date: {stopdate}')
+            print(f'Since startdate greater than stopdate, we interchange its value.')
+            print(f'> new start date: {startdate}')
+            print(f'> new start date: {stopdate}')
+            print()
 
 
         print(f'top buyer: ')
@@ -279,15 +290,6 @@ while True:
 
         if user_input == 'y':
             export_crm_old_list(main_db)
-
-  
-                
-
-            #for i in range (len(rs)):
-            #writeline
-               # print(row[0],row[1])
-            ##เอาค่าที่ออกมาจาก export มารวมกัน มี header 
-        
 
     
     while True:

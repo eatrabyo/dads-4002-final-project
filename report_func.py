@@ -1,4 +1,5 @@
 import pandas as pd
+
 import datetime
 from sqlalchemy import text,exc
 
@@ -83,7 +84,7 @@ def query_tot_sale_timerange_sum(engine,t_interval,startdate,stopdate=None):
         stopdate = startdate
     try:
         stmt = f"""
-        SELECT sum(ds.sale)/{t_interval} as avg_sale
+        SELECT round((sum(ds.sale)/{t_interval}),2) as avg_sale
 from (
 	SELECT DATE(purchasing_time) as date, SUM(price_per_unit * unit) as sale
 FROM main
@@ -122,18 +123,40 @@ limit 10;"""
 #ยัง join ไม่สำเร็จ
 def query_top_sale_cate(engine,startdate,stopdate):
     try:
-        stmt = f"""SELECT product_category,
-SUM(price_per_unit * unit) as sale
-FROM main
-Left join product
-ON main.product_id = product.id
-where purchasing_time between '{startdate}' and '{stopdate} 23:59:59'
-group by product_category
-order by sale DESC
-limit 3;"""
+        stmt = f"""
+        select case 
+            when d.product_category = 'pot' then 'กระถางต้นไม้'
+            when d.product_category = 'agl' then 'อโกลนีมา'
+            when d.product_category = 'phi' then 'ฟืโลเดนดรอน'
+            when d.product_category = 'sun' then 'ต้นไม้ทนแดด'
+            when d.product_category = 'air' then 'ต้นไม้ฟอกอากาศ'
+            when d.product_category = 'bon' then 'บอนไซ'
+            when d.product_category = 'han' then 'ต้นไม้แขวน'
+            when d.product_category = 'mmk' then 'ต้นไม้มงคล'
+            when d.product_category = 'fer' then 'ปุ๋ย'
+            when d.product_category = 'plu' then 'พลูด่าง'
+            when d.product_category = 'til' then 'ต้นไม้รากอากาศ'
+            when d.product_category = 'dec' then 'ของตกแต่ง'
+                    else 'A'
+            end as 'category name',
+            d.sale
+            
+            from (
+                SELECT product_category,
+                SUM(price_per_unit * unit) as sale
+                    from main
+                Left join product
+                ON main.product_id = product.id
+                where purchasing_time between '{startdate}' and '{stopdate}'
+                group by product_category
+                order by sale DESC
+                limit 3
+                ) as d;
+
+"""
         t = text(stmt)
         df = pd.read_sql(t,con=engine)
-        df.set_index('product_category', inplace = True)
+        df.set_index('category name', inplace = True)
         return df
     except exc.SQLAlchemyError as e:
         print(type(e))
@@ -175,11 +198,11 @@ def query_top_profit(engine,startdate,stopdate):
     try:
         stmt = f"""
             SELECT 
-            product_name,
-            price_per_unit,
+            product_name as 'product name',
+            price_per_unit as 'price',
             unit,
-            product_cost,
-        SUM((price_per_unit-product_cost) * unit) as profit
+            product_cost as cost,
+            SUM((price_per_unit-product_cost) * unit) as profit
         FROM main
         Left join product
         ON main.product_id = product.id
@@ -191,6 +214,8 @@ def query_top_profit(engine,startdate,stopdate):
         """
         t = text(stmt)
         df = pd.read_sql(t,con=engine)
+        df.set_index('product name', inplace = True)
+
         return df
     except exc.SQLAlchemyError as e:
         print(type(e))
@@ -204,7 +229,7 @@ def query_avr_basket(engine,startdate,stopdate=None):
         stopdate = startdate
     try:
         stmt = f"""
-        select avg(d1.sale)	
+        select round(avg(d1.sale),2) as 'average basket size'
         from(select 
             transaction_id
             ,date(purchasing_time) as "purchasing date"
@@ -219,7 +244,9 @@ def query_avr_basket(engine,startdate,stopdate=None):
         ;        """
         t = text(stmt)
         df = pd.read_sql(t,con=engine)
-        return df
+        tot_sale = df['average basket size'].values[0]
+        return tot_sale
+        
     except exc.SQLAlchemyError as e:
         print(type(e))
         print(e.orig)
@@ -254,7 +281,7 @@ def query_crm_top5(engine,startdate,stopdate):
         print(e.statement)
 
 
-
+#แก้ need group by transaction id
 def query_crm_old(engine,startdate,stopdate):
     if stopdate == None:
         stopdate = startdate
@@ -306,14 +333,67 @@ def query_crm_old_list(engine,startdate,stopdate):
                     Left join customer
                     ON main.customer_id = customer.id
                     
-                    where purchasing_time between '2022-10-1' and '2022-10-20 23:59:59'
+                    where purchasing_time between '{startdate}' and '{stopdate} 23:59:59'
                     group by customer_user,old_customer) as dm;
             """
         t = text(stmt)
         df = pd.read_sql(t,con=engine)
-        df.set_index('customer status', inplace = True)
+        df.set_index('customer name', inplace = True)
+
         return df
+
     except exc.SQLAlchemyError as e:
         print(type(e))
         print(e.orig)
         print(e.statement)
+
+
+def export_crm_old_list(engine):
+    with engine.connect() as con:
+ 
+        rs = con.execute("""
+                select customer_user 'customer name',
+                        case when dm.old_customer = 1 
+                                then 'old customer'
+                                else 'new customer'
+                        end as 'customer status'
+                        
+                        from ( 
+                                select 
+                                old_customer,
+                                customer_user
+                                from main
+                                Left join customer
+                                ON main.customer_id = customer.id
+                                
+                                where purchasing_time between '2022-10-10' and '2022-10-20 23:59:59'
+                                group by customer_user,old_customer) as dm;
+                        """)    
+        lst = []
+        for row in rs:
+                w = row[0] + ',' + row[1]
+                lst.append(w)
+                #print(row[0],row[1])
+
+        with open ("export.txt",mode = 'w',encoding = 'utf-8') as f:
+                for i in range (len(lst)):
+                        x = lst[i]
+                        f.writelines(x)
+                        f.writelines('\n')
+
+    
+
+
+#def print_crm_old_list(engine,startdate,stopdate):
+ #       for row in rs:
+  #      #writeline
+        #print(row[0],row[1])
+        
+        #with main_db.connect() as con:
+ #   rs = con.execute('SELECT * FROM product')
+  #  for row in rs:
+   #     print(row[0],row[1],row[2],row[3],row[4])
+        
+
+    #######
+    
