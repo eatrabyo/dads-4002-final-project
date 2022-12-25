@@ -8,13 +8,14 @@ from engine import main_db, mysql_engine
 
 def stock_aleart_greeting(engine):
     try:
-        ## os.system('cls') 
-        stmt = """
+        ## os.system('cls')
+        safety_stock = 10          
+        stmt = f"""
 select
 	product.id, product_name, stock, count(main.product_id) as sale_vol 
     from product
     left join main on product.id = main.product_id 
-    where  stock < 10
+    where  stock < {safety_stock}
     group by product.id
     order by stock asc;
 """
@@ -23,11 +24,16 @@ select
         table = df.set_index("id",inplace=True)
         print(f'\n----- STOCK ALERT ON {date.today()} -----')
         print(tabulate(df, headers='keys', tablefmt='psql'))
-        safety_stock = 10
-
+        
+        print('\n\nTo-do list')
+        
+        subtract = pd.DataFrame(safety_stock - df['stock'])
+        subtract.rename(columns = {'stock':'จำนวนที่ต้องซื้อเข้า'}, inplace = True)
+        df2=subtract.merge(df['product_name'],left_index=True, right_index=True)
+        print(tabulate(df2, headers='keys', tablefmt='psql'))
 
         while True:
-            ack = input('\nPlease READ stock alert and acknowledge (type a to acknowledge): ').lower()
+            ack = input('\nPlease READ stock alert and acknowledge "To-do list" (type a to acknowledge): ').lower()
             if ack == 'a':
                 break
     except exc.SQLAlchemyError as e:
@@ -35,6 +41,7 @@ select
         print(e.orig)
         print(e.statement)
 
+stock_aleart_greeting(main_db)
 
 
 #check password

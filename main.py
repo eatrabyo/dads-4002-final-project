@@ -92,8 +92,8 @@ def main():
                 manu_3_time_out = dt.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
                 ##break
             elif user == '4':
-                manu_4_time_in = dt.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
                 print(f'\nYou are now in "See report" page')
+                manu_4_time_in = dt.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
                 print('โค้ดใหม่')
 
 
@@ -119,7 +119,7 @@ def main():
                 break
         
         logout_time = dt.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
-        
+
         t1 = dt.datetime.strptime(login_time, "%d/%m/%Y %H:%M:%S")
         t2 = dt.datetime.strptime(logout_time, "%d/%m/%Y %H:%M:%S")
         insert1 = dt.datetime.strptime(manu_one_time_in, "%d/%m/%Y %H:%M:%S")
