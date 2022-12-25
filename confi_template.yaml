@@ -1,0 +1,5 @@
+user_local: root
+passw_local: ""
+host_local: localhost
+port_local: 3306
+database_local: dads_4002
