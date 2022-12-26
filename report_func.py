@@ -20,7 +20,8 @@ def query_tot_sale_day(engine,startdate,stopdate=None):
         stopdate = startdate
     try:
         stmt = f"""
-        SELECT DATE(purchasing_time) as date, SUM(price_per_unit * unit) as sale
+        SELECT DATE(purchasing_time) as date, 
+        SUM(price_per_unit * unit) as sale 
 FROM main 
 where purchasing_time between '{startdate}' and '{stopdate} 23:59:59'
 GROUP BY DATE(purchasing_time)
@@ -122,6 +123,8 @@ limit 10;"""
 
 #ยัง join ไม่สำเร็จ
 def query_top_sale_cate(engine,startdate,stopdate):
+    if stopdate == None:
+        stopdate = startdate
     try:
         stmt = f"""
         select case 
@@ -147,13 +150,12 @@ def query_top_sale_cate(engine,startdate,stopdate):
                     from main
                 Left join product
                 ON main.product_id = product.id
-                where purchasing_time between '{startdate}' and '{stopdate}'
+                where purchasing_time between '{startdate}' and '{stopdate} 23:59:59'
                 group by product_category
                 order by sale DESC
                 limit 3
                 ) as d;
-
-"""
+        """
         t = text(stmt)
         df = pd.read_sql(t,con=engine)
         df.set_index('category name', inplace = True)
@@ -165,6 +167,8 @@ def query_top_sale_cate(engine,startdate,stopdate):
 
 
 def query_percentage_change(engine,startdate,stopdate):
+    if stopdate == None:
+        stopdate = startdate
     try:
         stmt = f"""with net_sale as (
 	SELECT date(purchasing_time) as date,
@@ -184,7 +188,9 @@ def query_percentage_change(engine,startdate,stopdate):
 
         t = text(stmt)
         df = pd.read_sql(t,con=engine)
+        df.set_index('date', inplace = True)
         return df
+
     except exc.SQLAlchemyError as e:
         print(type(e))
         print(e.orig)
@@ -281,6 +287,30 @@ def query_crm_top5(engine,startdate,stopdate):
         print(e.statement)
 
 
+def query_crm_top_province(engine,startdate,stopdate):
+    if stopdate == None:
+        stopdate = startdate
+    try:
+        stmt = f"""
+        select
+            destination_province as province,
+            SUM(price_per_unit * unit) as sale
+        from main
+        where purchasing_time between '{startdate}' and '{stopdate} 23:59:59'
+        group by destination_province
+        order by sale DESC 
+        limit 5;
+    
+        """
+        t = text(stmt)
+        df = pd.read_sql(t,con=engine)
+        df.set_index('province', inplace = True)
+        return df
+    except exc.SQLAlchemyError as e:
+        print(type(e))
+        print(e.orig)
+        print(e.statement)
+
 #แก้ need group by transaction id
 def query_crm_old(engine,startdate,stopdate):
     if stopdate == None:
@@ -294,11 +324,13 @@ def query_crm_old(engine,startdate,stopdate):
         count(dm.old_customer) as 'number of customer'
 		from ( 
 			select 
-			    old_customer
+			    old_customer,
+			    customer_user
 			    from main
 			Left join customer
 			ON main.customer_id = customer.id
 			where purchasing_time between '{startdate}' and '{stopdate} 23:59:59'
+            group by old_customer , customer_user
 			)as dm
 		group by dm.old_customer;
 
@@ -347,11 +379,12 @@ def query_crm_old_list(engine,startdate,stopdate):
         print(e.orig)
         print(e.statement)
 
-
-def export_crm_old_list(engine):
+#problem when add variable start and stop date in rs = con.execute
+def export_crm_old_list(engine,stopdate,startdate):
+    if stopdate == None:
+        stopdate = startdate
     with engine.connect() as con:
- 
-        rs = con.execute("""
+        rs = con.execute(f"""
                 select customer_user 'customer name',
                         case when dm.old_customer = 1 
                                 then 'old customer'
@@ -366,34 +399,149 @@ def export_crm_old_list(engine):
                                 Left join customer
                                 ON main.customer_id = customer.id
                                 
-                                where purchasing_time between '2022-10-10' and '2022-10-20 23:59:59'
+                                where purchasing_time between '{startdate}' and '{stopdate} 23:59:59'
                                 group by customer_user,old_customer) as dm;
                         """)    
         lst = []
         for row in rs:
-                w = row[0] + ',' + row[1]
-                lst.append(w)
-                #print(row[0],row[1])
+            w = row[0] + ',' + row[1]
+            lst.append(w)
+            print(len(rs))
 
-        with open ("export.txt",mode = 'w',encoding = 'utf-8') as f:
-                for i in range (len(lst)):
-                        x = lst[i]
-                        f.writelines(x)
-                        f.writelines('\n')
+        #with open ("export.txt",mode = 'w',encoding = 'utf-8') as f:
+                # for i in range (len(lst)):
+                #         x = lst[i]
+                #         f.writelines(x)
+                #         f.writelines('\n')
+# with main_db.connect() as con:
+#         pr = con.execute('SELECT * FROM product')
+#         with open('ProductBackUp.txt', 'w', encoding='utf-8') as product_backup:  
+#             product_backup.writelines(f'\n---- Backup Product Data on {datetime.now()} ----')
+#             product_backup.writelines(f'\n\nid,product_category,product_name,product_cost,stock')
+#             for row in pr:
+#                 product_backup.writelines(f'\n{row[0]},{row[1]},{row[2]},{row[3]},{row[4]}')
 
+########## query ###########
+def query_rawdata_cus(engine,startdate,stopdate):
+    if stopdate == None:
+        stopdate = startdate
+    try:
+        stmt = f"""
+        with cus as ( 
+			select 
+			old_customer,
+			customer_user,
+			destination_province,
+   			transaction_id,
+   			SUM(price_per_unit * unit) as sale
+   			
+			from main
+			Left join customer
+			ON main.customer_id = customer.id
+			
+			where purchasing_time between '{startdate}' and '{stopdate} 23:59:59'
+			group by customer_user,old_customer,destination_province,transaction_id
+		)
+        select customer_user as 'customer name',
     
+        case when old_customer = 1 
+                then 'old customer'
+                else 'new customer'
+        end as 'customer status',
+        sale,destination_province,transaction_id
+        from cus
+            """
+        t = text(stmt)
+        df = pd.read_sql(t,con=engine)
+        df.set_index('customer name', inplace = True)
+
+        return df
+    except exc.SQLAlchemyError as e:
+        print(type(e))
+        print(e.orig)
+        print(e.statement)
 
 
-#def print_crm_old_list(engine,startdate,stopdate):
- #       for row in rs:
-  #      #writeline
-        #print(row[0],row[1])
-        
-        #with main_db.connect() as con:
- #   rs = con.execute('SELECT * FROM product')
-  #  for row in rs:
-   #     print(row[0],row[1],row[2],row[3],row[4])
-        
+def query_rawdata_oldcus(engine,startdate,stopdate):
+    if stopdate == None:
+        stopdate = startdate
+    try:
+        stmt = f"""
+        with cus as ( 
+			select 
+			old_customer,
+			customer_user,
+			destination_province,
+   			transaction_id,
+   			SUM(price_per_unit * unit) as sale
+   			
+			from main
+			Left join customer
+			ON main.customer_id = customer.id
+			
+			where purchasing_time between '{startdate}' and '{stopdate} 23:59:59' and old_customer = 1 
+			group by customer_user,old_customer,destination_province,transaction_id
+		)
+        select customer_user as 'customer name',
+    
+        case when old_customer = 1 
+                then 'old customer'
+                else 'new customer'
+        end as 'customer status',
+        sale,destination_province,transaction_id
+        from cus
+            """
+        t = text(stmt)
+        df = pd.read_sql(t,con=engine)
+        df.set_index('customer name', inplace = True)
 
-    #######
+        return df
+
+    except exc.SQLAlchemyError as e:
+        print(type(e))
+        print(e.orig)
+        print(e.statement)
+
+
+def query_rawdata_newcus(engine,startdate,stopdate):
+    if stopdate == None:
+        stopdate = startdate
+    try:
+        stmt = f"""
+        with cus as ( 
+			select 
+			old_customer,
+			customer_user,
+			destination_province,
+   			transaction_id,
+   			SUM(price_per_unit * unit) as sale
+   			
+			from main
+			Left join customer
+			ON main.customer_id = customer.id
+			
+			where purchasing_time between '{startdate}' and '{stopdate} 23:59:59' and old_customer = 0 
+			group by customer_user,old_customer,destination_province,transaction_id
+		)
+        select customer_user as 'customer name',
+    
+        case when old_customer = 1 
+                then 'old customer'
+                else 'new customer'
+        end as 'customer status',
+        sale,destination_province,transaction_id
+        from cus
+            """
+        t = text(stmt)
+        df = pd.read_sql(t,con=engine)
+        df.set_index('customer name', inplace = True)
+
+        return df
+    except exc.SQLAlchemyError as e:
+        print(type(e))
+        print(e.orig)
+        print(e.statement)
+    # 
+
+
     
