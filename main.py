@@ -25,6 +25,10 @@ def main():
                 else:
                     print('Please enter the menu!!')
                     continue
+            diff_insert = 0
+            diff_update = 0
+            diff_delete = 0
+            diff_stat = 0
 
             if user == '1':
                 manu_one_time_in = dt.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
@@ -57,6 +61,9 @@ def main():
                         break
                 elif user_insert == '3':
                     manu_one_time_out = dt.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+                    insert1 = dt.datetime.strptime(manu_one_time_in, "%d/%m/%Y %H:%M:%S")
+                    insert2 = dt.datetime.strptime(manu_one_time_out, "%d/%m/%Y %H:%M:%S")
+                    diff_insert = insert2-insert1
                     pass
             ##break
 
@@ -80,6 +87,9 @@ def main():
                     print('update Transaction table')
                 elif user_update == '4':
                     manu_2_time_out = dt.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+                    update1 = dt.datetime.strptime(manu_2_time_in, "%d/%m/%Y %H:%M:%S")
+                    update2 = dt.datetime.strptime(manu_2_time_out, "%d/%m/%Y %H:%M:%S")
+                    diff_update = update2-update1
                     pass            
                 ##break
             elif user == '3':
@@ -90,6 +100,9 @@ def main():
 
 
                 manu_3_time_out = dt.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+                delete1 = dt.datetime.strptime(manu_3_time_in, "%d/%m/%Y %H:%M:%S")
+                delete2 = dt.datetime.strptime(manu_3_time_out, "%d/%m/%Y %H:%M:%S")
+                diff_delete = delete2-delete1
                 ##break
             elif user == '4':
                 print(f'\nYou are now in "See report" page')
@@ -98,6 +111,9 @@ def main():
 
 
                 manu_4_time_out = dt.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+                stat1 = dt.datetime.strptime(manu_4_time_in, "%d/%m/%Y %H:%M:%S")
+                stat2 = dt.datetime.strptime(manu_4_time_out, "%d/%m/%Y %H:%M:%S")
+                diff_stat = stat2-stat1
                 ##break
             elif user == '5':
                 print(f'\nGoodbye :)')
@@ -119,25 +135,17 @@ def main():
                 break
         
         logout_time = dt.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
-
         t1 = dt.datetime.strptime(login_time, "%d/%m/%Y %H:%M:%S")
-        t2 = dt.datetime.strptime(logout_time, "%d/%m/%Y %H:%M:%S")
-        insert1 = dt.datetime.strptime(manu_one_time_in, "%d/%m/%Y %H:%M:%S")
-        insert2 = dt.datetime.strptime(manu_one_time_out, "%d/%m/%Y %H:%M:%S")
-        update1 = dt.datetime.strptime(manu_2_time_in, "%d/%m/%Y %H:%M:%S")
-        update2 = dt.datetime.strptime(manu_2_time_out, "%d/%m/%Y %H:%M:%S")
-        delete1 = dt.datetime.strptime(manu_3_time_in, "%d/%m/%Y %H:%M:%S")
-        delete2 = dt.datetime.strptime(manu_3_time_out, "%d/%m/%Y %H:%M:%S")
-        stat1 = dt.datetime.strptime(manu_4_time_in, "%d/%m/%Y %H:%M:%S")
-        stat2 = dt.datetime.strptime(manu_4_time_out, "%d/%m/%Y %H:%M:%S")
+        t2 = dt.datetime.strptime(logout_time, "%d/%m/%Y %H:%M:%S")    
+       
         ##logbook=
         
     with open(('RecordData.txt'),'a', encoding='utf-8') as myfile:    
         myfile.writelines(f'\n\nUSER: {user_name}\nIN: {login_time}\nOUT: {logout_time}\nTotal time spent: {t2-t1}')
-        myfile.writelines(f'\n     Insert Data: {insert2-insert1}')
-        myfile.writelines(f'\n     Update Data: {update2-update1}')
-        myfile.writelines(f'\n     Delete Data: {delete2-delete1}')
-        myfile.writelines(f'\n     See Report: {stat2-stat1}')
+        myfile.writelines(f'\n     Insert Data: {diff_insert}')
+        myfile.writelines(f'\n     Update Data: {diff_update}')
+        myfile.writelines(f'\n     Delete Data: {diff_delete}')
+        myfile.writelines(f'\n     See Report: {diff_stat}')
 
     gtfc.backup_all_data()
 
