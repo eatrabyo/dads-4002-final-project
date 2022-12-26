@@ -23,7 +23,7 @@ df=query_avr_basket(main_db,startdate,stopdate=None)
 print(f'Average basket size = {df} baht')
 print()
 
-print(f'sale of previous 7 days:')
+print(f'Sale of previous 7 days:')
 t_interval = 7
 df = query_tot_sale_timerange(main_db,t_interval,startdate)
 print(df)
@@ -55,7 +55,7 @@ print()
 print('To explore further?')
 while True:
     while True:
-        print('Report menu: \n 1. Sale report \n 2. Percentage change in sale  \n 3. Product top sale and top profit \n 4. Customer relationship \n 5. Showing data \n 6. exit')
+        print('Report menu: \n 1. Sale report \n 2. Product top sale and top profit \n 3. Customer data \n 5. Showing data \n 6. exit')
         report_menu = input('Please enter menu number: ')
         if report_menu in ['1','2','3','4','5','6']:
             break 
@@ -111,6 +111,11 @@ while True:
         print(f'Average basket size = {df} baht')
         print()
 
+        print(f'percentage change in sale: ')
+        print(f'day on day different')
+        df = query_percentage_change(main_db,startdate,stopdate)
+        print(df)
+
 #############
         while True:
             user_input = input (f'Would you to export data? (Y/N): ').lower()
@@ -125,7 +130,7 @@ while True:
 
     elif report_menu == '2':
         os.system('clear') # 'clear' on mac, for windows 'cls'
-        print(f'Menu 2: Percentage change in sale')
+        print(f'Menu 2: Product top sale and top profit')
         while True:
             try:
                 startdate = input('Start date (yyyy-mm-dd): ')
@@ -185,57 +190,11 @@ while True:
             #############
 
 
-    elif report_menu == '3':
-        os.system('clear') # 'clear' on mac, for windows 'cls'
-        print(f'Menu 3: Product top sale and top profit')
-        while True:
-            try:
-                startdate = input('Start date (yyyy-mm-dd): ')
-                validate(startdate)
-                break
-            except:
-                print("Invalid date and time format")
-                continue
-
-        while True:
-            try:
-                stopdate = input('Stop date (yyyy-mm-dd): ')
-                validate(stopdate)
-                break
-            except:
-                print("Invalid date and time format")
-                continue
-            #print('end of date stop format prove')
-        print()
-
-        if startdate > stopdate:
-            startdate , stopdate = stopdate , startdate
-            print(f'Since startdate greater than stopdate, we interchange its value.')
-            print(f'> new start date: {startdate}')
-            print(f'> new stop date: {stopdate}')
-            print()
-
-
-        print(f'percentage change in sale: ')
-        print(f'day on day different')
-        df = query_percentage_change(main_db,startdate,stopdate)
-        print(df)
-
-#############
-        while True:
-            user_input = input (f'Would you to export data? (Y/N): ').lower()
-            if user_input in ['y','n']:
-                break
-            else:
-                continue
-
-        #if user_input == 'y':
-            #############
 
     #CRM
-    elif report_menu == '4':
+    elif report_menu == '3':
         os.system('clear') # 'clear' on mac, for windows 'cls'
-        print(f'Menu 4: Product top sale and top profit')
+        print(f'Menu 3: Customer data')
         while True:
             try:
                 startdate = input('Start date (yyyy-mm-dd): ')
@@ -264,21 +223,64 @@ while True:
             print()
 
 
-        print(f'top buyer: ')
+        print(f'top 10 buyer with highest sale volume: ')
         df = query_crm_top5(main_db,startdate,stopdate)
         print(df)
         print()
 
+        print(f'top 10 province with highest sale volume: ')
+        df = query_crm_top_province(main_db,startdate,stopdate)
+        print(df)
+        print()
 
         print(f'number of new and old buyer: ')
         df = query_crm_old(main_db,startdate,stopdate)
         print(df)
         print()
 
-        
-        df = query_crm_old_list(main_db,startdate,stopdate)
+        while True:
+            user_input = input (f'Would you to export data? (Y/N): ').lower()
+            if user_input in ['y','n']:
+                break
+            else:
+                continue
+
+        if user_input == 'y':
+            export_crm_old_list(main_db,startdate,stopdate)
+
+
+
+###############
+
+ #query
+    elif report_menu == '4':
+        os.system('clear') # 'clear' on mac, for windows 'cls'
+        print(f'Menu 3: Customer data')
+        while True:
+            try:
+                startdate = input('Start date (yyyy-mm-dd): ')
+                validate(startdate)
+                break
+            except:
+                print("Invalid date and time format")
+                continue
+
+        while True:
+            try:
+                stopdate = input('Stop date (yyyy-mm-dd): ')
+                validate(stopdate)
+                break
+            except:
+                print("Invalid date and time format")
+                continue
+            #print('end of date stop format prove')
+        print()
+
+        print(f'list of customer: ')
+        df = query_rawdata_cus(main_db,startdate,stopdate)
         print(df)
         print()
+
 
 ###############
         while True:
@@ -289,7 +291,7 @@ while True:
                 continue
 
         if user_input == 'y':
-            export_crm_old_list(main_db)
+            export_crm_old_list(main_db,startdate,stopdate)
 
     
     while True:
