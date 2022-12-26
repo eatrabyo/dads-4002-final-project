@@ -132,7 +132,7 @@ def main():
         stat2 = dt.datetime.strptime(manu_4_time_out, "%d/%m/%Y %H:%M:%S")
         ##logbook=
         
-    with open('RecordData.txt', 'a', encoding='utf-8') as myfile:    
+    with open(('RecordData.txt'),'a', encoding='utf-8') as myfile:    
         myfile.writelines(f'\n\nUSER: {user_name}\nIN: {login_time}\nOUT: {logout_time}\nTotal time spent: {t2-t1}')
         myfile.writelines(f'\n     Insert Data: {insert2-insert1}')
         myfile.writelines(f'\n     Update Data: {update2-update1}')
