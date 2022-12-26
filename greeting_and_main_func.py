@@ -94,5 +94,3 @@ def backup_all_data():
             product_cat_backup.writelines(f'\n\nproduct_category,name') 
             for row in pc:
                 product_cat_backup.writelines(f'\n{row[0]},{row[1]}')
-
-backup_all_data()
