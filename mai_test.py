@@ -55,13 +55,13 @@ print()
 print('To explore further?')
 while True:
     while True:
-        print('Report menu: \n 1. Sale report \n 2. Product top sale and top profit \n 3. Customer data \n 5. Showing data \n 6. exit')
+        print('Report menu: \n 1. Sale report \n 2. Product top sale and top profit \n 3. Customer data \n 4. Showing data \n 5. exit')
         report_menu = input('Please enter menu number: ')
-        if report_menu in ['1','2','3','4','5','6']:
+        if report_menu in ['1','2','3','4','5']:
             break 
         else:
             print('Wrong menu number.')
-            print('Please select again from menu 1-6 as follow:')
+            print('Please select again from menu 1-5 as follow:')
             continue
     print()
 
@@ -117,15 +117,15 @@ while True:
         print(df)
 
 #############
-        while True:
-            user_input = input (f'Would you to export data? (Y/N): ').lower()
-            if user_input in ['y','n']:
-                break
-            else:
-                continue
+        # while True:
+        #     user_input = input (f'Would you to export data? (Y/N): ').lower()
+        #     if user_input in ['y','n']:
+        #         break
+        #     else:
+        #         continue
 
-        #if user_input == 'y':
-            #############
+        # #if user_input == 'y':
+        #     #############
 
 
     elif report_menu == '2':
@@ -179,12 +179,12 @@ while True:
         print()
 
 #############
-        while True:
-            user_input = input (f'Would you to export data? (Y/N): ').lower()
-            if user_input in ['y','n']:
-                break
-            else:
-                continue
+        # while True:
+        #     user_input = input (f'Would you to export data? (Y/N): ').lower()
+        #     if user_input in ['y','n']:
+        #         break
+        #     else:
+        #         continue
 
         #if user_input == 'y':
             #############
@@ -219,7 +219,7 @@ while True:
             startdate , stopdate = stopdate , startdate
             print(f'Since startdate greater than stopdate, we interchange its value.')
             print(f'> new start date: {startdate}')
-            print(f'> new start date: {stopdate}')
+            print(f'> new stop date: {stopdate}')
             print()
 
 
@@ -238,16 +238,15 @@ while True:
         print(df)
         print()
 
-        while True:
-            user_input = input (f'Would you to export data? (Y/N): ').lower()
-            if user_input in ['y','n']:
-                break
-            else:
-                continue
+        # while True:
+        #     user_input = input (f'Would you to export data? (Y/N): ').lower()
+        #     if user_input in ['y','n']:
+        #         break
+        #     else:
+        #         continue
 
-        if user_input == 'y':
-            export_crm_old_list(main_db,startdate,stopdate)
-
+        # if user_input == 'y':
+        #     export_crm_old_list(main_db,startdate,stopdate)
 
 
 ###############
@@ -281,17 +280,27 @@ while True:
         print(df)
         print()
 
+        print(f'list of old customer: ')
+        df = query_rawdata_oldcus(main_db,startdate,stopdate)
+        print(df)
+        print()
 
-###############
-        while True:
-            user_input = input (f'Would you to export data? (Y/N): ').lower()
-            if user_input in ['y','n']:
-                break
-            else:
-                continue
+        print(f'list of new customer: ')
+        df = query_rawdata_newcus(main_db,startdate,stopdate)
+        print(df)
+        print()
 
-        if user_input == 'y':
-            export_crm_old_list(main_db,startdate,stopdate)
+
+# ###############
+#         while True:
+#             user_input = input (f'Would you to export data? (Y/N): ').lower()
+#             if user_input in ['y','n']:
+#                 break
+#             else:
+#                 continue
+
+#         if user_input == 'y':
+#             export_crm_old_list(main_db,startdate,stopdate)
 
     
     while True:
