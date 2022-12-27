@@ -24,7 +24,7 @@ def main():
         gtfc.stock_aleart_greeting(main_db)
         while True:
             while True:
-                print('\n\nPlease select any of the following manu \n 1.Insert data \n 2.Update data \n 3.Delete data \n 4.See report \n 5.Exit')
+                print('\n\n================================================================\n\n                   -- MENU --\n\n Please select any of the following manu \n 1.Insert data \n 2.Update data \n 3.Delete data \n 4.See report \n 5.Exit')
                 user = input('\nWhat do you like to do today? (type 1, 2, 3, 4, or 5): ')
                 if user in ['1','2','3','4','5']:
                     break
@@ -35,8 +35,8 @@ def main():
 
             if user == '1':
                 manu_one_time_in = dt.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
-                print(f'\nYou are now in "Insert Data" page')
-                print('Which data do you want to insert? \n 1.Customer \n 2.Transaction \n 3.Exit ')
+                print(f'\n======================================\n\n             -- You are now in "Insert Data" page --')
+                print('\nWhich data do you want to insert? \n 1.Customer \n 2.Transaction \n 3.Exit ')
                 while True:
                     user_insert = input('Please select option above: ')
                     if user_insert in ['1','2','3']:
@@ -73,8 +73,8 @@ def main():
 
             elif user == '2':
                 manu_2_time_in = dt.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
-                print(f'\nYou are now in "Update Data" page')
-                print('Which data do you want to update? \n 1.Customer \n 2.Product \n 3.Transaction \n 4.Exit')
+                print(f'\n======================================\n\n             -- You are now in "Update Data" page --')
+                print('\nWhich data do you want to update? \n 1.Customer \n 2.Product \n 3.Transaction \n 4.Exit')
                 while True:
                     user_update = input('Please select option above: ')                    
                     if user_update in ['1','2','3','4']:
@@ -100,8 +100,8 @@ def main():
                 ##break
             elif user == '3':
                 manu_3_time_in = dt.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
-                print(f'\nYou are now in "Delete Data" page')
-                print('delete transaction table')
+                print(f'\n======================================\n\n             -- You are now in "Delete Data" page --')
+                print('\n\ndelete transaction table')
 
                 ##time.sleep(5)
 
@@ -114,9 +114,9 @@ def main():
                 
                 ##break
             elif user == '4':
-                print(f'\nYou are now in "See report" page')
+                print(f'\n======================================\n\n             -- You are now in "See report" page --')
                 manu_4_time_in = dt.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
-                print('โค้ดใหม่')
+                print('\n\nโค้ดใหม่')
 
                 ##time.sleep(5)
 
