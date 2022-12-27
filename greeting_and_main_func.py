@@ -16,7 +16,7 @@ select
     from product
     left join main on product.id = main.product_id 
     where  stock < {safety_stock}
-    group by product.id
+    group by product.id, product_name, stock
     order by stock asc;
 """
         #stock slert
@@ -79,13 +79,13 @@ def backup_all_data():
 
         ma = con.execute('SELECT * FROM main')
         with open(f'MainBackUp {now1.strftime("%d%m%Y_%H%M%S")}.txt', 'w', encoding='utf-8') as main_backup:   
-            main_backup.writelines(f'\n\nid,transaction_id,purchasing_time,customer_id,product_id,price_per_uni,uni,destination_district,destination_province,postal_code') 
+            main_backup.writelines(f'\n\nid,transaction_id,product_id,customer_id,purchasing_time,price_per_uni,unit,destination_district,destination_province,postal_code') 
             for row in ma:
-                main_backup.writelines(f'\n{row[0]},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]},{row[6]},{row[7]},{row[8],{row[9]}}')
+                main_backup.writelines(f'\n{row[0]},{row[1]},{row[2]},{row[3]},{row[4]},{row[5]},{row[6]},{row[7]},{row[8]},{row[9]}')
         
         cu = con.execute('SELECT * FROM customer')
         with open(f'CustomerBackUp {now1.strftime("%d%m%Y_%H%M%S")}.txt', 'w', encoding='utf-8') as customer_backup:   
-            customer_backup.writelines(f'\n\ncustomer_user,old_customer,phone_number,email') 
+            customer_backup.writelines(f'\n\nid,customer_user,old_customer,phone_number,email') 
             for row in cu:
                 customer_backup.writelines(f'\n{row[0]},{row[1]},{row[2]},{row[3]},{row[4]}')
         

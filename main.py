@@ -14,10 +14,10 @@ def main():
     print('\033[\n\n+1m'+'**** Welcome to Stock management DADs4002 ****'+'\033[0m')
     auth, login_time, user_name = gtfc.login()
     
-    diff_insert = 0
-    diff_update = 0
-    diff_delete = 0
-    diff_stat = 0
+    diff_insert = '00:00:000'
+    diff_update = '00:00:000'
+    diff_delete = '00:00:000'
+    diff_stat = '00:00:000'
 
     if auth == True:
         ##print(f'your login time is {login_time,user_name}')
