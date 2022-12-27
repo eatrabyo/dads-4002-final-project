@@ -1,6 +1,0 @@
-
-
-USER: karun_kook
-IN: 24/12/2022 20:16:16
-OUT: 24/12/2022 20:20:10
-Total time spent: 0:03:54
