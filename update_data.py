@@ -10,7 +10,7 @@ from update_func import update_email,update_phone,update_stock,update_prod_cost,
 # update customer table menu
 def update_customer_tbl():
     while True:
-        os.system('clear') # 'clear' on mac, for windows 'cls'
+        os.system('cls') # 'clear' on mac, for windows 'cls'
         try:
             # asking user for which customer_id to update
             customer_id = int(input("Please enter customer id: "))
@@ -88,7 +88,7 @@ def update_customer_tbl():
 # update product table menu
 def update_product_tbl():
     while True:
-        os.system('clear') # 'clear' on mac, for windows 'cls'
+        os.system('cls') # 'clear' on mac, for windows 'cls'
         try:
             # asking customer which product_id to update
             prod_id = input("Please enter product id: ")
@@ -170,7 +170,7 @@ def update_product_tbl():
 def update_main_tbl():
     # update main table
     while True:
-        os.system('clear') # 'clear' on mac, for windows 'cls'
+        os.system('cls') # 'clear' on mac, for windows 'cls'
         try:
             # asking user which transaction to update
             trans_id = input('Please enter transaction id: ')
@@ -188,7 +188,7 @@ def update_main_tbl():
                 
                 # check if menu number is valid
                 while True:
-                    os.system('clear') # 'clear' on mac, for windows 'cls'
+                    os.system('cls') # 'clear' on mac, for windows 'cls'
                     print("\n",trans_df,"\n")
                     # ask user which column to update
                     print("\n Which column would you like to update?\n    1. Product id\n    2. Customer id\n    3. Purchasing time\
@@ -203,7 +203,7 @@ def update_main_tbl():
                 
                 # Product id menu
                 if product_update_menu_num == '1':
-                    os.system('clear') # 'clear' on mac, for windows 'cls'
+                    os.system('cls') # 'clear' on mac, for windows 'cls'
                     print(trans_df)
 
                     # check if user input row_id match with list of primary key
@@ -213,12 +213,12 @@ def update_main_tbl():
                             if row_id in main_tbl_id:
                                 break
                             else:
-                                os.system('clear') # 'clear' on mac, for windows 'cls'
+                                os.system('cls') # 'clear' on mac, for windows 'cls'
                                 print(f'Please enter valid row id for {trans_id}.\n')
                                 print(trans_df)
                                 continue
                         except:
-                            os.system('clear') # 'clear' on mac, for windows 'cls'
+                            os.system('cls') # 'clear' on mac, for windows 'cls'
                             print(f'Please enter valid row id for {trans_id}.\n')
                             print(trans_df)
                             continue
@@ -247,7 +247,7 @@ def update_main_tbl():
                     
                 # customer id menu
                 elif product_update_menu_num == '2':
-                    os.system('clear') # 'clear' on mac, for windows 'cls'
+                    os.system('cls') # 'clear' on mac, for windows 'cls'
                     print(trans_df)
 
                     customer_list = query_customer_list(main_db)
@@ -271,7 +271,7 @@ def update_main_tbl():
                 
                 # purchasing time menu
                 elif product_update_menu_num == '3':
-                    os.system('clear') # 'clear' on mac, for windows 'cls'
+                    os.system('cls') # 'clear' on mac, for windows 'cls'
                     print(trans_df)
 
                     # check user input is correct datetime format
@@ -291,7 +291,7 @@ def update_main_tbl():
 
                 # Price per unit menu
                 elif product_update_menu_num == '4':
-                    os.system('clear') # 'clear' on mac, for windows 'cls'
+                    os.system('cls') # 'clear' on mac, for windows 'cls'
                     print(trans_df)
 
                     # check if user input row_id match with list of primary key
@@ -301,12 +301,12 @@ def update_main_tbl():
                             if row_id in main_tbl_id:
                                 break
                             else:
-                                os.system('clear') # 'clear' on mac, for windows 'cls'
+                                os.system('cls') # 'clear' on mac, for windows 'cls'
                                 print(f'Please enter valid row id for {trans_id}.\n')
                                 print(trans_df)
                                 continue
                         except:
-                            os.system('clear') # 'clear' on mac, for windows 'cls'
+                            os.system('cls') # 'clear' on mac, for windows 'cls'
                             print(f'Please enter valid row id for {trans_id}.\n')
                             print(trans_df)
                             continue
@@ -330,7 +330,7 @@ def update_main_tbl():
                     
                 # Unit menu
                 elif product_update_menu_num == '5':
-                    os.system('clear') # 'clear' on mac, for windows 'cls'
+                    os.system('cls') # 'clear' on mac, for windows 'cls'
                     print(trans_df)
 
                     # check if user input row_id match with list of primary key
@@ -340,12 +340,12 @@ def update_main_tbl():
                             if row_id in main_tbl_id:
                                 break
                             else:
-                                os.system('clear') # 'clear' on mac, for windows 'cls'
+                                os.system('cls') # 'clear' on mac, for windows 'cls'
                                 print(f'Please enter valid row id for {trans_id}\n.')
                                 print(trans_df)
                                 continue
                         except:
-                            os.system('clear') # 'clear' on mac, for windows 'cls'
+                            os.system('cls') # 'clear' on mac, for windows 'cls'
                             print(f'Please enter valid row id for {trans_id}\n.')
                             print(trans_df)
                             continue
@@ -391,7 +391,7 @@ def update_main_tbl():
 
                 # Postal 
                 elif product_update_menu_num == '6':
-                    os.system('clear') # 'clear' on mac, for windows 'cls'
+                    os.system('cls') # 'clear' on mac, for windows 'cls'
                     print(trans_df)
 
                     # get postal code

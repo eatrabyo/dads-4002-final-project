@@ -10,7 +10,7 @@ from update_func import update_cus_status_by_id
 
 def insert_customer_tbl():
     while True:
-        os.system('clear') # 'clear' on mac, for windows 'cls'
+        os.system('cls') # 'clear' on mac, for windows 'cls'
         try:
             # check email and user name input is valid
             while True:
@@ -63,7 +63,7 @@ def insert_customer_tbl():
 
 def insert_main_tbl():
     while True:
-        os.system('clear') # 'clear' on mac, for windows 'cls'
+        os.system('cls') # 'clear' on mac, for windows 'cls'
 
         # empty dataframe
         new_trans_df = pd.DataFrame(columns=['transaction_id','product_id','customer_id','purchasing_time','price_per_unit','unit','destination_district',
@@ -121,7 +121,7 @@ def insert_main_tbl():
 
         # ask user how many product in this trans
         while True:
-            os.system('clear') # 'clear' on mac, for windows 'cls'
+            os.system('cls') # 'clear' on mac, for windows 'cls'
             try:
                 counter_limit = int(input("How many product in this new transaction?: "))
                 if counter_limit > 0:
@@ -135,7 +135,7 @@ def insert_main_tbl():
         c = 0
         product_list = query_product_list(main_db)
         while c != counter_limit:
-            os.system('clear') # 'clear' on mac, for windows 'cls'
+            os.system('cls') # 'clear' on mac, for windows 'cls'
 
             # product for this trans
             # check if product id is valid
@@ -229,7 +229,7 @@ def insert_main_tbl():
 # insert new product by old transaction
 def insert_main_tbl_for_more_prod():
     while True:
-        os.system('clear') # 'clear' on mac, for windows 'cls'
+        os.system('cls') # 'clear' on mac, for windows 'cls'
         try:
             # asking user for old transaction
             edited_trans = input('Enter transaction you want to add more product: ')
@@ -256,7 +256,7 @@ def insert_main_tbl_for_more_prod():
 
                 # ask user how many product in this trans
                 while True:
-                    os.system('clear') # 'clear' on mac, for windows 'cls'
+                    os.system('cls') # 'clear' on mac, for windows 'cls'
                     try:
                         counter_limit = int(input("How many product in this new transaction?: "))
                         if counter_limit > 0:
@@ -270,7 +270,7 @@ def insert_main_tbl_for_more_prod():
                 c = 0
                 product_list = query_product_list(main_db)
                 while c != counter_limit:
-                    os.system('clear') # 'clear' on mac, for windows 'cls'
+                    os.system('cls') # 'clear' on mac, for windows 'cls'
 
                     # product for this trans
                     # check if product id is valid

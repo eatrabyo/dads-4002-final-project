@@ -5,7 +5,7 @@ from engine import main_db
 
 def delete_transaction_tbl():
     while True:
-        os.system('clear') # 'clear' on mac, for windows 'cls'
+        os.system('cls') # 'clear' on mac, for windows 'cls'
         try:
             # asking user which transaction to update
             trans_id = input('Please enter transaction id: ')
@@ -27,12 +27,12 @@ def delete_transaction_tbl():
                             if row_id in main_tbl_id:
                                 break
                             else:
-                                os.system('clear') # 'clear' on mac, for windows 'cls'
+                                os.system('cls') # 'clear' on mac, for windows 'cls'
                                 print(f'Please enter valid row id for {trans_id}.\n')
                                 print(trans_df)
                                 continue
                         except:
-                            os.system('clear') # 'clear' on mac, for windows 'cls'
+                            os.system('cls') # 'clear' on mac, for windows 'cls'
                             print(f'Please enter valid row id for {trans_id}.\n')
                             print(trans_df)
                             continue
