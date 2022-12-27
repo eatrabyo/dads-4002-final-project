@@ -14,10 +14,10 @@ def main():
     print('\033[\n\n+1m'+'**** Welcome to Stock management DADs4002 ****'+'\033[0m')
     auth, login_time, user_name = gtfc.login()
     
-    diff_insert = '00:00:000'
-    diff_update = '00:00:000'
-    diff_delete = '00:00:000'
-    diff_stat = '00:00:000'
+    diff_insert = '00:00:00'
+    diff_update = '00:00:00'
+    diff_delete = '00:00:00'
+    diff_stat = '00:00:00'
 
     if auth == True:
         ##print(f'your login time is {login_time,user_name}')
@@ -63,12 +63,13 @@ def main():
                     if user_insert_option_2 == '3':
                         break
                 elif user_insert == '3':
-                    manu_one_time_out = dt.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
-                    insert1 = dt.datetime.strptime(manu_one_time_in, "%d/%m/%Y %H:%M:%S")
-                    insert2 = dt.datetime.strptime(manu_one_time_out, "%d/%m/%Y %H:%M:%S")
-                    diff_insert = insert2-insert1
+                                    
                     pass
-            
+                
+                manu_one_time_out = dt.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+                insert1 = dt.datetime.strptime(manu_one_time_in, "%d/%m/%Y %H:%M:%S")
+                insert2 = dt.datetime.strptime(manu_one_time_out, "%d/%m/%Y %H:%M:%S")
+                diff_insert = insert2-insert1
             ##break
 
             elif user == '2':
@@ -89,13 +90,13 @@ def main():
                     print('update product table')
                 elif user_update == '3':
                     print('update Transaction table')
-                elif user_update == '4':
-                    manu_2_time_out = dt.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
-                    update1 = dt.datetime.strptime(manu_2_time_in, "%d/%m/%Y %H:%M:%S")
-                    update2 = dt.datetime.strptime(manu_2_time_out, "%d/%m/%Y %H:%M:%S")
-                    diff_update = update2-update1
+                elif user_update == '4': 
                     pass
                 
+                manu_2_time_out = dt.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+                update1 = dt.datetime.strptime(manu_2_time_in, "%d/%m/%Y %H:%M:%S")
+                update2 = dt.datetime.strptime(manu_2_time_out, "%d/%m/%Y %H:%M:%S")
+                diff_update = update2-update1
                            
                 ##break
             elif user == '3':
