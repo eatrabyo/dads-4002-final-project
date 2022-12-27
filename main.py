@@ -6,7 +6,9 @@ import pandas as pd
 
 from engine import main_db
 import greeting_and_main_func as gtfc
-from insert_data import insert_customer_tbl
+from insert_data import *
+from update_data import *
+from delete_data import *
 
 def main():
 #Greeting
@@ -57,9 +59,9 @@ def main():
                             print('Please enter the menu!!')
                             continue
                     if user_insert_option_2 == '1':
-                        print('insert main table')
+                        insert_main_tbl()
                     if user_insert_option_2 == '2':
-                        print('insert main table for more products')
+                        insert_main_tbl_for_more_prod()
                     if user_insert_option_2 == '3':
                         break
                 elif user_insert == '3':
@@ -85,11 +87,11 @@ def main():
                         continue
 
                 if user_update == '1':
-                    print('update customer table')
+                    update_customer_tbl()
                 elif user_update == '2':
-                    print('update product table')
+                    update_product_tbl()
                 elif user_update == '3':
-                    print('update Transaction table')
+                    update_main_tbl()
                 elif user_update == '4': 
                     pass
                 
@@ -102,7 +104,7 @@ def main():
             elif user == '3':
                 manu_3_time_in = dt.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
                 print(f'\n======================================\n\n             -- You are now in "Delete Data" page --')
-                print('\n\ndelete transaction table')
+                delete_transaction_tbl()
 
                 ##time.sleep(5)
 
