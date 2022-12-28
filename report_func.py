@@ -1143,39 +1143,36 @@ def export_sale_report(engine,startdate,stopdate):
 
     
 
-# def export_sale_report2(engine,startdate,stopdate):
-#     if stopdate == None:
-#         stopdate = startdate
+def export_sale_report2(engine,startdate,stopdate):
+    if stopdate == None:
+        stopdate = startdate
 
-#     with engine.connect() as con:
-#         stmt3 = f"""
-#         SELECT DATE(purchasing_time) as date, 
-#         SUM(price_per_unit * unit) as sale
-#         FROM main
-#         where date(purchasing_time) between {startdate}' and '{startdate} 23:59:59'
-#         GROUP BY DATE(purchasing_time)
-#         order by Date(purchasing_time) ASC;
-#                         """
-#         rs = con.execute(stmt3)
-#         lst3 = []
-#         for row in rs:
-#             y = str(row[0])
-#             lst3.append(y)
+    with engine.connect() as con:
+        stmt3 = f"""
+        SELECT DATE(purchasing_time) as date, 
+        SUM(price_per_unit * unit) as sale
+        FROM main
+        where date(purchasing_time) between '{startdate}' and '{stopdate}'
+        GROUP BY DATE(purchasing_time)
+        order by Date(purchasing_time) ASC;
+                        """
+        rs = con.execute(stmt3)
+        lst3 = []
+        for row in rs:
+            y = str(row[0]) + ',' + str(row[1])
+            lst3.append(y)
 
 
-#         with open (f"sale_report_2_{startdate}_{stopdate}.txt",mode = 'w',encoding = 'utf-8') as f:
-#             f.writelines('total sale: ')  
-#             for i in range (len(lst1)):
-#                     x = lst1[i]
-#                     f.writelines(w)
-#                     f.writelines('\n')
-#     #total sale      
-#             f.writelines('Sale of each day: ')  
-#             for i in range (len(lst3)):
-#                     x = lst3[i]
-#                     f.writelines(y)
-#                     f.writelines('\n')
+        with open (f"sale_report_2_{startdate}_{stopdate}.txt",mode = 'w',encoding = 'utf-8') as f:
+        #sale of each day     
+            f.writelines('date,sale\n')  
+            for i in range (len(lst3)):
+                    y = lst3[i]
+                    f.writelines(y)
+                    f.writelines('\n')
 
+
+# ขึ้น value error -> 
 
 # def export_sale_report3(engine,startdate,stopdate):
 #     if stopdate == None:
@@ -1196,7 +1193,7 @@ def export_sale_report(engine,startdate,stopdate):
 #             select date,sale,
 #             sale - LAG(sale,1) OVER (ORDER BY date) AS diff,
 #             round(((sale / ( LAG(sale,1) OVER (ORDER BY date)) -1) *100),2) AS 'diff(%)'
-#             from (net_sale);
+#             from net_sale;
 #                         """
 #         rs = con.execute(stmt4)
 #         lst4 = []
@@ -1205,17 +1202,11 @@ def export_sale_report(engine,startdate,stopdate):
 #             lst4.append(z)
 
 #         with open (f"sale_report_3_{startdate}_{stopdate}.txt",mode = 'w',encoding = 'utf-8') as f:
-#             f.writelines('total sale: ')  
-#             for i in range (len(lst1)):
-#                     x = lst1[i]
-#                     f.writelines(w)
+#             f.writelines('percentage change in sale: ')  
+#             for i in range (len(lst4)):
+#                     x = lst4[i]
+#                     f.writelines(z)
 #                     f.writelines('\n')
-
-            # f.writelines('percentage change in sale: ')  
-            # for i in range (len(lst4)):
-            #         x = lst4[i]
-            #         f.writelines(z)
-            #         f.writelines('\n')
 
                 
 

@@ -129,7 +129,7 @@ def report():
 
                 if user_input == 'y':
                     export_sale_report(main_db,startdate,stopdate)
-                    # export_sale_report2(main_db,startdate,stopdate)
+                    export_sale_report2(main_db,startdate,stopdate)
                     #export_sale_report3(main_db,startdate,stopdate)
 
 
@@ -188,7 +188,7 @@ def report():
                 df = query_top_profit(main_db,startdate,stopdate)
                 print(df)
                 print()
-                
+
                 while True:
                     user_input = input (f'Would you to export data? (Y/N): ').lower()
                     if user_input in ['y','n']:
