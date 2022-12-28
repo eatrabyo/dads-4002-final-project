@@ -9,6 +9,7 @@ import greeting_and_main_func as gtfc
 from insert_data import *
 from update_data import *
 from delete_data import *
+from report import *
 
 def main():
 #Greeting
@@ -119,7 +120,7 @@ def main():
             elif user == '4':
                 print(f'\n======================================\n\n             -- You are now in "See report" page --')
                 manu_4_time_in = dt.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
-                print('\n\nโค้ดใหม่')
+                report()
 
                 ##time.sleep(5)
 

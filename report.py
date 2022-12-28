@@ -10,7 +10,7 @@ def report():
     #startdate = date.today()
     #ตั้งใจให้แสดง dashboard ของ วันปัจจุบัน
 
-    os.system('clear') # 'clear' on mac, for windows 'cls'
+    os.system('cls') # 'clear' on mac, for windows 'cls'
     print('Welcome')
     print(f"Let's see summary of: {startdate}")
     print()
@@ -68,7 +68,7 @@ def report():
 
 
         if report_menu == '1':
-            os.system('clear') # 'clear' on mac, for windows 'cls'
+            os.system('cls') # 'clear' on mac, for windows 'cls'
             print(f'Menu 1: Sale report')
             while True:
                 try:
@@ -135,7 +135,7 @@ def report():
  ##################           
 
         elif report_menu == '2':
-            os.system('clear') # 'clear' on mac, for windows 'cls'
+            os.system('cls') # 'clear' on mac, for windows 'cls'
             print(f'Menu 2: Product top sale and top profit')
             while True:
                 try:
@@ -203,7 +203,7 @@ def report():
 
         #CRM
         elif report_menu == '3':
-            os.system('clear') # 'clear' on mac, for windows 'cls'
+            os.system('cls') # 'clear' on mac, for windows 'cls'
             print(f'Menu 3: Customer data')
             while True:
                 try:
@@ -272,7 +272,7 @@ def report():
         elif report_menu == '4':
              #query
     
-            os.system('clear') # 'clear' on mac, for windows 'cls'
+            os.system('cls') # 'clear' on mac, for windows 'cls'
             print(f'Menu 4: Raw data')
 
     ###
@@ -290,7 +290,7 @@ def report():
                 print()
                 
                 if export_menu == '1':
-                    os.system('clear') # 'clear' on mac, for windows 'cls'
+                    os.system('cls') # 'clear' on mac, for windows 'cls'
                     print(f'Menu 1: Main table')
 
                     while True:
@@ -340,7 +340,7 @@ def report():
 ###########################################
         
                 elif export_menu == '2':
-                    os.system('clear') # 'clear' on mac, for windows 'cls'
+                    os.system('cls') # 'clear' on mac, for windows 'cls'
                     print(f'Menu 2: Customer information')
 
                     while True:
@@ -401,7 +401,7 @@ def report():
                 
 ###########################################
                 elif export_menu == '3':
-                    os.system('clear') # 'clear' on mac, for windows 'cls'
+                    os.system('cls') # 'clear' on mac, for windows 'cls'
                     print(f'Menu 3: Product and inventory')
 
                     while True:
@@ -480,8 +480,5 @@ def report():
             elif loop_to_main == 'n':
                 print(f'Back to main menu')
                 break
-
-report()
-
 
 
