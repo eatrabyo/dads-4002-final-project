@@ -130,8 +130,6 @@ def report():
                 if user_input == 'y':
                     export_sale_report(main_db,startdate,stopdate)
                     export_sale_report2(main_db,startdate,stopdate)
-                    #export_sale_report3(main_db,startdate,stopdate)
-
 
 
  ##################           
