@@ -51,7 +51,7 @@ def main():
                 if user_insert == '1':
                     insert_customer_tbl()
                 elif user_insert == '2':
-                    print('Which data do you want to insert? \n1. New Transaction \n2. New Product for Old Transaction \3.Exit')
+                    print('Which data do you want to insert? \n1. New Transaction \n2. New Product for Old Transaction \n3.Exit')
                     while True:
                         user_insert_option_2 = input('Please select option above: ')
                         if user_insert_option_2 in ['1','2','3']:
