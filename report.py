@@ -125,10 +125,11 @@ def report():
                     continue
 
             if user_input == 'y':
-                export_tot_sale_day_sum(main_db,startdate,stopdate)
-                export_tot_sale_timerange(main_db,t_interval,startdate,stopdate)
-                export_avr_basket(main_db,startdate,stopdate)
-                export_percentage_change(main_db,startdate,stopdate)
+                export_sale_report(main_db,startdate,stopdate)
+                # export_sale_report2(main_db,startdate,stopdate)
+                export_sale_report3(main_db,startdate,stopdate)
+
+
 
  ##################           
 
@@ -454,6 +455,7 @@ def report():
         elif loop_to_main == 'n':
             print(f'Back to main menu')
             break
+
 report()
 
 
