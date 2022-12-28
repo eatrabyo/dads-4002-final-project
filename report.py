@@ -272,8 +272,8 @@ def report():
             while True:
                 while True:
                     print('Report menu: \n 1. Transaction table \n 2. Customer information \n 3. product and stock \n 4. exit')
-                    report_menu = input('Please enter menu number: ')
-                    if report_menu in ['1','2','3','4']:
+                    export_menu = input('Please enter menu number: ')
+                    if export_menu in ['1','2','3','4']:
                         break 
                     else:
                         print('Wrong menu number.')
@@ -281,7 +281,7 @@ def report():
                         continue
                 print()
                 
-                if report_menu == '1':
+                if export_menu == '1':
                     os.system('clear') # 'clear' on mac, for windows 'cls'
                     print(f'Menu 1: Main table')
 
@@ -327,7 +327,7 @@ def report():
 
 ###########################################
         
-                elif report_menu == '2':
+                elif export_menu == '2':
                     os.system('clear') # 'clear' on mac, for windows 'cls'
                     print(f'Menu 2: Customer information')
 
@@ -385,7 +385,7 @@ def report():
                     
                 
 ###########################################
-                elif report_menu == '3':
+                elif export_menu == '3':
                     os.system('clear') # 'clear' on mac, for windows 'cls'
                     print(f'Menu 3: Product and inventory')
 
@@ -428,33 +428,39 @@ def report():
 
                     if user_input == 'y':             
                         export_rawdata_product(main_db,startdate,stopdate)
-
-
-                while True:
-                    loop_to_main = input("Would you like to see another table? (Y/N): ").lower()
-                    if loop_to_main in ['y','n']:
-                        break
-                    else:
-                        continue
-                if loop_to_main == 'y':
-                    continue
-                elif loop_to_main == 'n':
-                    print(f'Back to report menu')
+                
+                if export_menu == '4':
+                    print(f'Back to main menu')
                     break
+                else:
+                    while True:
+                        loop_to_main = input("Would you like to see another table? (Y/N): ").lower()
+                        if loop_to_main in ['y','n']:
+                            break
+                        else:
+                            continue
+                    if loop_to_main == 'y':
+                        continue
+                    elif loop_to_main == 'n':
+                        print(f'Back to report menu')
+                        break
 
     ###############
-        
-        while True:
-            loop_to_main = input("Would you like to see another report? (Y/N): ").lower()
-            if loop_to_main in ['y','n']:
-                break
-            else:
-                continue
-        if loop_to_main == 'y':
-            continue
-        elif loop_to_main == 'n':
+        if report_menu == '5':
             print(f'Back to main menu')
             break
+        else:
+            while True:
+                loop_to_main = input("Would you like to see another report? (Y/N): ").lower()
+                if loop_to_main in ['y','n']:
+                    break
+                else:
+                    continue
+            if loop_to_main == 'y':
+                continue
+            elif loop_to_main == 'n':
+                print(f'Back to main menu')
+                break
 
 report()
 
