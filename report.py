@@ -95,39 +95,42 @@ def report():
                 print(f'> new stop date: {stopdate}')
                 print()
 
+            df = existdf(main_db,startdate,stopdate=None)
+            if len(df) == 0:
+                print('No data in given date selection')
+            else:
+                # รายการยอดรวม สินค้า ตามวันที่เลือก
+                print(f'Sale summary between: {startdate} to {stopdate}')
 
-            # รายการยอดรวม สินค้า ตามวันที่เลือก
-            print(f'Sale summary between: {startdate} to {stopdate}')
+                df = query_tot_sale_day_sum(main_db,startdate,stopdate)
+                print(f'Total sale = {df} baht')
+                print()
 
-            df = query_tot_sale_day_sum(main_db,startdate,stopdate)
-            print(f'Total sale = {df} baht')
-            print()
+                df = query_tot_sale_timerange(main_db,startdate,stopdate)
+                print(f'Sale of each day:')
+                print(df)
+                print()
 
-            df = query_tot_sale_timerange(main_db,startdate,stopdate)
-            print(f'Sale of each day:')
-            print(df)
-            print()
+                df=query_avr_basket(main_db,startdate,stopdate=None)
+                print(f'Average basket size = {df} baht')
+                print()
 
-            df=query_avr_basket(main_db,startdate,stopdate=None)
-            print(f'Average basket size = {df} baht')
-            print()
+                print(f'percentage change in sale: ')
+                print(f'day on day different')
+                df = query_percentage_change(main_db,startdate,stopdate)
+                print(df)
 
-            print(f'percentage change in sale: ')
-            print(f'day on day different')
-            df = query_percentage_change(main_db,startdate,stopdate)
-            print(df)
+                while True:
+                    user_input = input (f'Would you to export data? (Y/N): ').lower()
+                    if user_input in ['y','n']:
+                        break
+                    else:
+                        continue
 
-            while True:
-                user_input = input (f'Would you to export data? (Y/N): ').lower()
-                if user_input in ['y','n']:
-                    break
-                else:
-                    continue
-
-            if user_input == 'y':
-                export_sale_report(main_db,startdate,stopdate)
-                # export_sale_report2(main_db,startdate,stopdate)
-                export_sale_report3(main_db,startdate,stopdate)
+                if user_input == 'y':
+                    export_sale_report(main_db,startdate,stopdate)
+                    # export_sale_report2(main_db,startdate,stopdate)
+                    #export_sale_report3(main_db,startdate,stopdate)
 
 
 
@@ -162,39 +165,41 @@ def report():
                 print(f'> new stop date: {stopdate}')
                 print()
 
+            df = existdf(main_db,startdate,stopdate=None)
+            if len(df) == 0:
+                print('No data in given date selection')
+            else:
+                # สินค้าขายดี 10 อันดับแรกของวันที่เลือก
+                print(f'Top product sale:')
+                df = query_top_sale_product(main_db)
+                print(df)
+                print()
 
-            # สินค้าขายดี 10 อันดับแรกของวันที่เลือก
-            print(f'Top product sale:')
-            df = query_top_sale_product(main_db)
-            print(df)
-            print()
 
+                #หมวดหมู่สินค้าขายดี 3 อันดับแรกของวันที่เลือก
+                print(f'Top 3 category sale:')
+                df = query_top_sale_cate(main_db,startdate,stopdate)
+                print(df)
+                print()
+                
 
-            #หมวดหมู่สินค้าขายดี 3 อันดับแรกของวันที่เลือก
-            print(f'Top 3 category sale:')
-            df = query_top_sale_cate(main_db,startdate,stopdate)
-            print(df)
-            print()
-            
+                #สินค้าที่ทำกำไรสูงสุด 3 อันดับแรกของวันที่เลือก
+                print(f'Top 10 profitable product:')
+                df = query_top_profit(main_db,startdate,stopdate)
+                print(df)
+                print()
+                
+                while True:
+                    user_input = input (f'Would you to export data? (Y/N): ').lower()
+                    if user_input in ['y','n']:
+                        break
+                    else:
+                        continue
 
-            #สินค้าที่ทำกำไรสูงสุด 3 อันดับแรกของวันที่เลือก
-            print(f'Top 10 profitable product:')
-            df = query_top_profit(main_db,startdate,stopdate)
-            print(df)
-            print()
-
-    #############
-            while True:
-                user_input = input (f'Would you to export data? (Y/N): ').lower()
-                if user_input in ['y','n']:
-                    break
-                else:
-                    continue
-
-            if user_input == 'y':
-                export_top_sale_product(main_db,startdate,stopdate)
-                export_top_sale_cate(main_db,startdate,stopdate)
-                export_top_profit(main_db,startdate,stopdate)
+                if user_input == 'y':
+                    export_top_sale_product(main_db,startdate,stopdate)
+                    export_top_sale_cate(main_db,startdate,stopdate)
+                    export_top_profit(main_db,startdate,stopdate)
 
 
 
@@ -229,33 +234,38 @@ def report():
                 print(f'> new stop date: {stopdate}')
                 print()
 
+            df = existdf(main_db,startdate,stopdate=None)
+            if len(df) == 0:
+                print('No data in given date selection')
 
-            print(f'top 10 buyer with highest sale volume: ')
-            df = query_crm_top10(main_db,startdate,stopdate)
-            print(df)
-            print()
+            else:
 
-            print(f'top 10 province with highest sale volume: ')
-            df = query_crm_top_province(main_db,startdate,stopdate)
-            print(df)
-            print()
+                print(f'top 10 buyer with highest sale volume: ')
+                df = query_crm_top10(main_db,startdate,stopdate)
+                print(df)
+                print()
 
-            print(f'number of new and old buyer: ')
-            df = query_crm_old(main_db,startdate,stopdate)
-            print(df)
-            print()
+                print(f'top 10 province with highest sale volume: ')
+                df = query_crm_top_province(main_db,startdate,stopdate)
+                print(df)
+                print()
 
-            while True:
-                user_input = input (f'Would you to export data? (Y/N): ').lower()
-                if user_input in ['y','n']:
-                    break
-                else:
-                    continue
+                print(f'number of new and old buyer: ')
+                df = query_crm_old(main_db,startdate,stopdate)
+                print(df)
+                print()
 
-            if user_input == 'y':
-                export_crm_top10(main_db,startdate,stopdate)
-                export_crm_top_province(main_db,startdate,stopdate)
-                export_crm_old(main_db,startdate,stopdate)
+                while True:
+                    user_input = input (f'Would you to export data? (Y/N): ').lower()
+                    if user_input in ['y','n']:
+                        break
+                    else:
+                        continue
+
+                if user_input == 'y':
+                    export_crm_top10(main_db,startdate,stopdate)
+                    export_crm_top_province(main_db,startdate,stopdate)
+                    export_crm_old(main_db,startdate,stopdate)
 
 
     ###############
@@ -309,21 +319,25 @@ def report():
                         print(f'> new start date: {startdate}')
                         print(f'> new stop date: {stopdate}')
                         print()
-                    
-                    print(f'list of transaction: ')
-                    df = query_rawdata_main(main_db,startdate,stopdate)
-                    print(df)
-                    print()
+            
+                    df = existdf(main_db,startdate,stopdate=None)
+                    if len(df) == 0:
+                        print('No data in given date selection')
+                    else:               
+                        print(f'list of transaction: ')
+                        df = query_rawdata_main(main_db,startdate,stopdate)
+                        print(df)
+                        print()
 
-                    while True:
-                        user_input = input (f'Would you to export data? (Y/N): ').lower()
-                        if user_input in ['y','n']:
-                            break
-                        else:
-                            continue
+                        while True:
+                            user_input = input (f'Would you to export data? (Y/N): ').lower()
+                            if user_input in ['y','n']:
+                                break
+                            else:
+                                continue
 
-                    if user_input == 'y':
-                        export_rawdata_main(main_db,startdate,stopdate)
+                        if user_input == 'y':
+                            export_rawdata_main(main_db,startdate,stopdate)
 
 ###########################################
         
@@ -355,33 +369,36 @@ def report():
                         print(f'> new start date: {startdate}')
                         print(f'> new stop date: {stopdate}')
                         print()
+                    df = existdf(main_db,startdate,stopdate=None)
+                    if len(df) == 0:
+                        print('No data in given date selection')
+                    else:
+                        print(f'list of customer: ')
+                        df = query_rawdata_cus(main_db,startdate,stopdate)
+                        print(df)
+                        print()
 
-                    print(f'list of customer: ')
-                    df = query_rawdata_cus(main_db,startdate,stopdate)
-                    print(df)
-                    print()
+                        print(f'list of old customer: ')
+                        df = query_rawdata_oldcus(main_db,startdate,stopdate)
+                        print(df)
+                        print()
 
-                    print(f'list of old customer: ')
-                    df = query_rawdata_oldcus(main_db,startdate,stopdate)
-                    print(df)
-                    print()
+                        print(f'list of new customer: ')
+                        df = query_rawdata_newcus(main_db,startdate,stopdate)
+                        print(df)
+                        print()
+                        
+                        while True:
+                            user_input = input (f'Would you to export data? (Y/N): ').lower()
+                            if user_input in ['y','n']:
+                                break
+                            else:
+                                continue
 
-                    print(f'list of new customer: ')
-                    df = query_rawdata_newcus(main_db,startdate,stopdate)
-                    print(df)
-                    print()
-                    
-                    while True:
-                        user_input = input (f'Would you to export data? (Y/N): ').lower()
-                        if user_input in ['y','n']:
-                            break
-                        else:
-                            continue
-
-                    if user_input == 'y':             
-                        export_rawdata_cus(main_db,startdate,stopdate)
-                        export_rawdata_oldcus(main_db,startdate,stopdate)
-                        export_rawdata_newcus(main_db,startdate,stopdate)
+                        if user_input == 'y':             
+                            export_rawdata_cus(main_db,startdate,stopdate)
+                            export_rawdata_oldcus(main_db,startdate,stopdate)
+                            export_rawdata_newcus(main_db,startdate,stopdate)
                     
                 
 ###########################################
@@ -414,20 +431,24 @@ def report():
                         print(f'> new stop date: {stopdate}')
                         print()
                     
-                    print(f'list of Product and Inventory: ')
-                    df = query_rawdata_product(main_db,startdate,stopdate)
-                    print(df)
-                    print()
+                    df = existdf(main_db,startdate,stopdate=None)
+                    if len(df) == 0:
+                        print('No data in given date selection')
+                    else:                    
+                        print(f'list of Product and Inventory: ')
+                        df = query_rawdata_product(main_db,startdate,stopdate)
+                        print(df)
+                        print()
 
-                    while True:
-                        user_input = input (f'Would you to export data? (Y/N): ').lower()
-                        if user_input in ['y','n']:
-                            break
-                        else:
-                            continue
+                        while True:
+                            user_input = input (f'Would you to export data? (Y/N): ').lower()
+                            if user_input in ['y','n']:
+                                break
+                            else:
+                                continue
 
-                    if user_input == 'y':             
-                        export_rawdata_product(main_db,startdate,stopdate)
+                        if user_input == 'y':             
+                            export_rawdata_product(main_db,startdate,stopdate)
                 
                 if export_menu == '4':
                     print(f'Back to main menu')

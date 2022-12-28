@@ -6,12 +6,33 @@ from sqlalchemy import text,exc
 
 #function check date time format
 
+
+
 def validate(date_text):
     try:
         datetime.datetime.strptime(date_text, '%Y-%m-%d')
     except ValueError:
         raise ValueError("Incorrect data format, should be YYYY-MM-DD")
     return('correct')
+
+def existdf(engine,startdate,stopdate=None):
+    if stopdate == None:
+        stopdate = startdate
+    try:
+        stmt = f"""
+        select transaction_id
+        from main
+        where purchasing_time between '{startdate}' and '{stopdate} 23:59:59'
+        ;
+        """
+        t = text(stmt)
+        df = pd.read_sql(t,con=engine)
+        return df
+
+    except exc.SQLAlchemyError as e:
+        print(type(e))
+        print(e.orig)
+        print(e.statement)
 
 ##############################################################
 
